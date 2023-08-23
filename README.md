@@ -3,6 +3,11 @@
 LaTeX document-style for typesetting Theses or Dissertations in accordance with the University of Southern California Regulations for [Format and Presentation of Theses and Dissertations](http://graduateschool.usc.edu/current-students/thesis-dissertation-submission/guidelines-for-format-and-presentation/).
 It provides some alternative "bells and whistles" such as support for multi-volume documents.
 
+
+## Overview
+
+This contains the latex template for the Ph.D. dissertation proposal (Qualifying Examination) for Fall 2023
+
 ## History
 
 A brief history of LaTeX templates for dissertation and thesis at the University of Southern California:
