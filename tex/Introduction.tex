@@ -1,6 +1,27 @@
 \chapter{Introduction}
 \label{cha:introduction}
 This chapter provides the necessary background material and details the organization of my proposed work.
+
+\section{Multi-modality}
+\subsection{Modalities - Definition and Introduction}
+\textit{Modality refers to the way something happens around us or is perceived by humans} \cite{Baltruaitis2017MultimodalML}. The world around us is composed of multiple sensory modalities, as listed below, with enabled capabilities:
+\begin{itemize}
+    \item \textbf{Visual:} Watching objects and events in the current visual scene
+    \item \textbf{Language:} Verbal interactions with other humans 
+    \item \textbf{Audio:} Speaking and hearing environmental sounds 
+    \item \textbf{Touch:} Feeling texture of objects 
+    \item \textbf{Smell:} Distinguishing between pleasant and unpleasant odors.
+\end{itemize}
+In artificial intelligence, a given task is considered multi-modal if multiple sensory modalities are needed to solve the same. The goal of artificial intelligence is to develop autonomous agents capable of processing information from a wide variety of input modalities for tackling complex reasoning tasks. As mentioned by Liang et al. \cite{Liang2022FoundationsAR}, the key properties associated with learning from multimodal data are listed as follows:
+\begin{itemize}
+    \item \textbf{Heterogeneity:} Heterogeneous nature of different modalities due to diversity in qualities, structures, and representations
+    \item \textbf{Connectedness:} Shared/common information between different modalities due to inter-related nature.
+    \item \textbf{Interaction:} Existence of optimal interactions/fusions between different modalities, suitable for particular task.
+\end{itemize}
+    
+\subsection{Rise of multi-modal content}
+Give a sense of media data that is inherently multi-modal and rising in content
+
 \section{What is context ?}
 In computer vision, context \cite{contextvision} refers to any relevant information encompassing the attributes of the object and event considered, along with other entities (objects and events) in the given scene, both visual and non-visual. Contextual information enables a wide variety of tasks, including object recognition, human affect perception, and salient event detection in videos, by providing additional cues needed for accurate inference. For example, the visual scene in a given image provides the necessary contextual information to detect commonly co-occurring objects along with any atypical placements. In terms of object placements, utensils are more likely to be found in the kitchen as compared to bedrooms or stadiums. An example of context providing the required information to improve object recognition under challenging conditions (poor lighting, image blurring, ) is shown in Fig \ref{object recognition}. The blurred object (marked by a red circle), when viewed in isolation, is not recognizable. However, when the object is placed in the context of the entire visual scene i.e. office, we can see that it is likely to be a keyboard.
 \begin{figure}
@@ -46,8 +67,12 @@ In spite of clear divisions between short-term and long-term temporal contexts b
 \item Long-term contextual association between the shots based on an integrated narrative.
 \end{itemize}
 \subsection{External modalities}
+Apart from visual-only information, modalities such as audio, language, and prior weather information also provide relevant contextual information for various reasoning tasks. For example, in the case of audio-visual tasks, the audio associated with an entity, i.e., dog barking, can help us estimate the proximity of the sound source and localize it in the given video \cite{Tian2018AudioVisualEL}. Further usage of audio modality as an additional contextual source for visual tasks has been explored in floorplan design \cite{purushwalkam2020audio} and audio-visual navigation for virtual agents \cite{chen2020soundspaces}. For various vision-language tasks like temporal grounding, natural language queries can be used as contextual inputs to isolate regions of interest in unconstrained videos \cite{Zhang2022TemporalSG}. Besides language and audio, additional contextual information available through thermal sensors \cite{Seymour2017AutomatedDA} is used to augment the visually captured data for improving wildlife detection in remote areas.
 
-\section{Multi-modal content}
+\subsection{Local context}
+
+\subsection{Global context}
+
 \section{Context-driven multi-modal understanding}
 \section{Organization of proposal}
 
