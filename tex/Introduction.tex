@@ -18,6 +18,17 @@ In artificial intelligence, a given task is considered multi-modal if multiple s
     \item \textbf{Connectedness:} Shared/common information between different modalities due to inter-related nature.
     \item \textbf{Interaction:} Existence of optimal interactions/fusions between different modalities, suitable for particular task.
 \end{itemize}
+Based on the above properties associated with multiple modalities, the major challenges in multimodal learning \cite{Liang2022FoundationsAR} can be summarized below:
+
+\begin{itemize}
+    \item \textbf{Representation:} Learning representations through fusion mechanisms that capture the heterogeneity of the modalities along with the shared information. For example, language is considered symbolic due to its word-based composition, whereas audio and visual modalities are represented through signals.
+    \item \textbf{Alignment:} Identifying relationships between (sub) elements of different modalities. This requires similarity computation between different modalities along with the handling of long-term dependencies.
+    \item \textbf{Reasoning:} Combining knowledge from multiple sources (including external, i.e. knowledge graphs) in a multi-step inference process by exploiting the task structure.
+    \item \textbf{Generation:} Translating between different modalities and summarization of multimodal data by preserving the salient content.
+    \item \textbf{Transference:} Transferring cross-modal knowledge from secondary modalities to the primary modality in the presence of noise or limited data.
+\end{itemize}
+
+In this work, we deal with the alignment, reasoning, and transference challenges associated with multi-modal learning.
     
 \subsection{Rise of multi-modal content}
 Give a sense of media data that is inherently multi-modal and rising in content
