@@ -12,7 +12,9 @@ This chapter provides the necessary background material and details the organiza
     \item \textbf{Touch:} Feeling texture of objects 
     \item \textbf{Smell:} Distinguishing between pleasant and unpleasant odors.
 \end{itemize}
-In artificial intelligence, a given task is considered multi-modal if multiple sensory modalities are needed to solve the same. The goal of artificial intelligence is to develop autonomous agents capable of processing information from a wide variety of input modalities for tackling complex reasoning tasks. As mentioned by Liang et al. \cite{Liang2022FoundationsAR}, the key properties associated with learning from multimodal data are listed as follows:
+For humans, the information from multiple sensory sources is processed by distinct regions of the brain for different perceptual tasks \cite{Alain2001WhatA,BornkesselSchlesewsky2015NeurobiologicalRO,Wallace2002HistochemicalIO}. While the visual input processing is handled by the occipital lobe in the brain, the auditory and language inputs are processed by specific regions of the temporal lobe. The division of the human neural processing system into regions that can process a wide variety of modalities indicates the heterogeneity among different sources along with underlying commonalities.
+
+In artificial intelligence, a given task is considered multi-modal if multiple sensory modalities are needed to solve the same. The goal of artificial intelligence is to develop autonomous agents that can learn from diverse input modalities to solve complex reasoning tasks. As mentioned by Liang et al. \cite{Liang2022FoundationsAR}, the key properties associated with learning from multimodal data are listed as follows:
 \begin{itemize}
     \item \textbf{Heterogeneity:} Heterogeneous nature of different modalities due to diversity in qualities, structures, and representations
     \item \textbf{Connectedness:} Shared/common information between different modalities due to inter-related nature.
@@ -31,7 +33,17 @@ Based on the above properties associated with multiple modalities, the major cha
 In this work, we deal with the alignment, reasoning, and transference challenges associated with multi-modal learning.
     
 \subsection{Rise of multi-modal content}
-Give a sense of media data that is inherently multi-modal and rising in content
+
+With the rapid rise in heterogeneous internet networks across the globe, vast amounts of web-based content have been generated at different scales, variety, and velocity \cite{Gao2020ASO}. Web-based sources convey information to the viewers through a combination of multiple modalities. For example, an online news article about a major sports event contains text descriptions with accompanying images. Further, the movies or TV shows hosted through online streaming platforms portray narratives through the combination of video and audio signals (music, speech, ambient sounds). 
+The demand for media content, especially movies, TV shows, and advertisements, is expected to rise over the next three years, with the projected market value to reach 2.9 trillion US dollars, as shown in Fig \ref{media industry demand}.
+\begin{figure}[h!]
+    \centering 
+     \includegraphics[width=0.6\linewidth]{figures/media_industry_demand.png}
+     \caption[Media value]{Expected value of entertainment market industry from 2017 to 2026 \footnotemark} 
+     \label{media industry demand}
+\end{figure}
+\footnotetext{\url{https://www.enterpriseappstoday.com/stats/media-and-entertainment-industry-statistics.html}}
+The growing demand for multi-modal media content has led to various descriptive tasks such as captioning \cite{Abdar2023ARO}, video summarization \cite{Apostolidis2021VideoSU}, and question-answering \cite{defaria2023visual}, aimed at enhancing user experience. In the following sections we will introduce the concept of context and how multiple modalities provide contextual information.
 
 \section{What is context ?}
 In computer vision, context \cite{contextvision} refers to any relevant information encompassing the attributes of the object and event considered, along with other entities (objects and events) in the given scene, both visual and non-visual. Contextual information enables a wide variety of tasks, including object recognition, human affect perception, and salient event detection in videos, by providing additional cues needed for accurate inference. For example, the visual scene in a given image provides the necessary contextual information to detect commonly co-occurring objects along with any atypical placements. In terms of object placements, utensils are more likely to be found in the kitchen as compared to bedrooms or stadiums. An example of context providing the required information to improve object recognition under challenging conditions (poor lighting, image blurring, ) is shown in Fig \ref{object recognition}. The blurred object (marked by a red circle), when viewed in isolation, is not recognizable. However, when the object is placed in the context of the entire visual scene i.e. office, we can see that it is likely to be a keyboard.
@@ -81,9 +93,26 @@ In spite of clear divisions between short-term and long-term temporal contexts b
 Apart from visual-only information, modalities such as audio, language, and prior weather information also provide relevant contextual information for various reasoning tasks. For example, in the case of audio-visual tasks, the audio associated with an entity, i.e., dog barking, can help us estimate the proximity of the sound source and localize it in the given video \cite{Tian2018AudioVisualEL}. Further usage of audio modality as an additional contextual source for visual tasks has been explored in floorplan design \cite{purushwalkam2020audio} and audio-visual navigation for virtual agents \cite{chen2020soundspaces}. For various vision-language tasks like temporal grounding, natural language queries can be used as contextual inputs to isolate regions of interest in unconstrained videos \cite{Zhang2022TemporalSG}. Besides language and audio, additional contextual information available through thermal sensors \cite{Seymour2017AutomatedDA} is used to augment the visually captured data for improving wildlife detection in remote areas.
 
 \subsection{Local context}
+Local context refers to the \textit{contextual information associated with objects itself (\textbf{intrinsic}) and surrounding local regions (\textbf{extrinsic}) such as color, shape, contrast, aspect ratio} \cite{contextvision}. Local context is closely related to spatial information in terms of the immediate neighborhood of the objects in the scene. Effective utilization of local context enables the detection of small objects in complex scenes with multiple entities.
 
 \subsection{Global context}
 
+Global context utilizes \textit{the overall configuration of the scene as a source of contextual information \cite{contextvision}}. The primary sources of global context information are as follows:
+\textbf{(A) Visual scene:} The visual scene where the objects are present, i.e. living room, kitchen, train station etc. \\
+\textbf{(B) Time of day:} The timing shown in the given image/video i.e. day, night, evening, or morning. \\
+\textbf{ (C) Weather:} The ambient weather conditions associated with the given scene, i.e. sunny etc. \\
+\textbf{ (D) Environment:} The environment associated with the given scene i.e., inside or outside.
+\par 
+Visual scene, along with the associated environment provides the prior context for finding certain objects. For example, there is a greater likelihood of finding utensils in the kitchen (\textbf{indoor visual scene}) as compared to train station (\textbf{outdoor visual scene}). Global context information (in the form of visual scenes) also influences the relative placement of different objects, like the proximity of a keyboard to the monitor in an office setup. Further, the accurate identification of different objects as part of the local contextual information in a given image/video can also help 
+in recognizing the given visual scene \cite{Torralba2003ContextualPF} and its attributes (i.e., indoor/outdoor, time of day, etc.). FFor example, the presence of a microwave oven and dishwasher indicates that the visual scene is likely a kitchen. The global context information can also help in identifying atypical scenarios \cite{Choi2012ContextMA} involving objects i.e. a car located in sky or a plane running on highway, as shown in Fig \ref{outcontext}. 
+
+\begin{figure}[h!]
+    \centering
+        \includegraphics[width=0.5\linewidth]{figures/out_of_context_image.png}
+        \caption{Sample images from \cite{Choi2012ContextMA} showing atypical scenarios involving violations of support, position, probability, size }
+        \label{outcontext}
+\end{figure}
+    
 \section{Context-driven multi-modal understanding}
 \section{Organization of proposal}
 
