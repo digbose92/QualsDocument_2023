@@ -90,10 +90,10 @@ In spite of clear divisions between short-term and long-term temporal contexts b
 \item Long-term contextual association between the shots based on an integrated narrative.
 \end{itemize}
 \subsection{External modalities}
-Apart from visual-only information, modalities such as audio, language, and prior weather information also provide relevant contextual information for various reasoning tasks. For example, in the case of audio-visual tasks, the audio associated with an entity, i.e., dog barking, can help us estimate the proximity of the sound source and localize it in the given video \cite{Tian2018AudioVisualEL}. Further usage of audio modality as an additional contextual source for visual tasks has been explored in floorplan design \cite{purushwalkam2020audio} and audio-visual navigation for virtual agents \cite{chen2020soundspaces}. For various vision-language tasks like temporal grounding, natural language queries can be used as contextual inputs to isolate regions of interest in unconstrained videos \cite{Zhang2022TemporalSG}. Besides language and audio, additional contextual information available through thermal sensors \cite{Seymour2017AutomatedDA} is used to augment the visually captured data for improving wildlife detection in remote areas.
+Apart from visual-only information, modalities such as audio, language, and prior weather information also provide relevant contextual information for various reasoning tasks. For example, in the case of audio-visual tasks, the audio associated with an entity, i.e., dog barking, can help us estimate the proximity of the sound source and localize it in the given video \cite{Tian2018AudioVisualEL}. Further usage of audio modality as an additional contextual source for visual tasks has been explored in floorplan design \cite{purushwalkam2020audio} and audio-visual navigation for virtual agents \cite{chen2020soundspaces}. For various vision-language tasks like temporal grounding, natural language queries can be used as contextual inputs to isolate regions of interest in unconstrained videos \cite{Zhang2022TemporalSG}. Besides language and audio, additional contextual information available through thermal sensors \cite{Seymour2017AutomatedDA} is used to augment the visually captured data for improving wildlife detection in remote areas. In case of affect understanding problems, multi-turn dialogues (\textbf{language modality}) provide the necessary context information (i.e. topics and flow of information) along with facial expressions for emotion tracking of the speakers \cite{Zhao2022M3EDMM}.
 
 \subsection{Local context}
-Local context refers to the \textit{contextual information associated with objects itself (\textbf{intrinsic}) and surrounding local regions (\textbf{extrinsic}) such as color, shape, contrast, aspect ratio} \cite{contextvision}. Local context is closely related to spatial information in terms of the immediate neighborhood of the objects in the scene. Effective utilization of local context enables the detection of small objects in complex scenes with multiple entities.
+Local context refers to the \textit{contextual information associated with objects itself (\textbf{intrinsic}) and surrounding local regions (\textbf{extrinsic}) such as color, shape, contrast, aspect ratio} \cite{contextvision}. Local context is closely related to spatial information in terms of the immediate neighborhood of the objects in the scene. Effective utilization of local context enables the detection of small objects in complex scenes with multiple entities. External modalities often provide local context for multi-modal reasoning, i.e., the conversation history (\textbf{language}) enables the autonomous agent associated with visual dialog \cite{Das2016VisualD} to provide the correct in-context answer.
 
 \subsection{Global context}
 
@@ -104,7 +104,7 @@ Global context utilizes \textit{the overall configuration of the scene as a sour
 \textbf{ (D) Environment:} The environment associated with the given scene i.e., inside or outside.
 \par 
 Visual scene, along with the associated environment provides the prior context for finding certain objects. For example, there is a greater likelihood of finding utensils in the kitchen (\textbf{indoor visual scene}) as compared to train station (\textbf{outdoor visual scene}). Global context information (in the form of visual scenes) also influences the relative placement of different objects, like the proximity of a keyboard to the monitor in an office setup. Further, the accurate identification of different objects as part of the local contextual information in a given image/video can also help 
-in recognizing the given visual scene \cite{Torralba2003ContextualPF} and its attributes (i.e., indoor/outdoor, time of day, etc.). FFor example, the presence of a microwave oven and dishwasher indicates that the visual scene is likely a kitchen. The global context information can also help in identifying atypical scenarios \cite{Choi2012ContextMA} involving objects i.e. a car located in sky or a plane running on highway, as shown in Fig \ref{outcontext}. 
+in recognizing the given visual scene \cite{Torralba2003ContextualPF} and its attributes (i.e., indoor/outdoor, time of day, etc.). For example, the presence of a microwave oven and dishwasher indicates that the visual scene is likely a kitchen. The global context information can also help in identifying atypical scenarios \cite{Choi2012ContextMA} involving objects i.e., a car located in the sky or a plane running on a highway, as shown in Fig \ref{outcontext}. 
 
 \begin{figure}[h!]
     \centering
@@ -114,5 +114,20 @@ in recognizing the given visual scene \cite{Torralba2003ContextualPF} and its at
 \end{figure}
     
 \section{Context-driven multi-modal understanding}
+
+\begin{figure}[h!]
+    \centering
+        \includegraphics[width=0.9\linewidth]{figures/Context_drawings.pdf}
+        \caption{Role of context in (a) human affect perception. Image source: \cite{barrettcontext}  (b) interactive visual-dialog with chatbot }
+        \label{contextmultimodal}
+\end{figure}
+
+Multi-modal tasks require the processing of diverse contextual information followed by fusion for both macro and instance-level content understanding. In the case of multi-modal content, the contextual information is usually obtained through multiple input modalities. In \textbf{Fig \ref{contextmultimodal} (a)}, we can see that the face (\textbf{local context}) suggests that the person is experiencing negative emotion (i.e. \textbf{pain}). However, after including the \textbf{global context} for affect understanding, i.e., the visual scene (\textbf{tennis court}) and bodily expressions, it can be inferred that the person is celebrating a positive outcome. In Fig \textbf{Fig \ref{contextmultimodal} (b)}, the task is to interact with a chatbot by asking natural language questions regarding the image.
+For answering the question marked in red: \textit{Are there other items on the table ?}, the knowledge of \textbf{spatial context} through the objects in the image along with \textbf{global context} i.e., visual scene is needed with the \textbf{local context} (conversational) through the questions.  After accurate processing of the contextual information, the chatbot can understand that the question being asked refers to all the items in the image except the mug and cat.
+
+\textbf{How to finish this section ?}
+
+
+
 \section{Organization of proposal}
 
