@@ -38,14 +38,67 @@ Our contributions are as follows:
 \section{Related work}
 \textbf{Image datasets for visual scene recognition:}
 Image datasets for scene classification like MIT Indoor67 \cite{IndoorScenes} relied on categorizing a finite set of (67) indoor scene classes. A broad categorization into indoor, outdoor (natural) and outdoor (man-made) groups for 130K images across 397 subcategories was introduced by the SUN dataset \cite{xiao_sun_2016}. For large-scale scene recognition, the Places dataset \cite{zhou2017places} was developed with 434 scene labels spanning 10 million images. The scene taxonomy considered in the Places dataset was derived from the SUN dataset, followed by the careful merging of similar pairs. It should be noted that the curation of large-scale visual scene datasets like Places relied on crowd-sourced manual annotations over multiple rounds.\\
-\section{Role of multi-modality:}
-    \subsection{Language driven taxonomy curation}
-    \subsection{Usage of vision-language models}
-    \subsubsection{CLIP: Learning Transferable Visual Models From Natural Language Supervision}
-    \subsection{MovieCLIP dataset}
-    \subsubsection{CLIP-based visual tagging}
-    \subsubsection{Analysis of CLIP tagging}
-    \subsubsection{Quality estimation through human verification}
+\textbf{Video datasets for visual scene recognition:} While there has been considerable progress in terms of action recognition capabilities from videos due to the introduction of large-scale datasets like Kinetics \cite{kinetics400}, ActivityNet \cite{caba2015activitynet}, AVA \cite{gu2018ava}, Something-Something \cite{Something-SomethingV2}, only few large scale datasets like HVU \cite{diba_large_2020} and Scenes, Objects and Actions (SOA) \cite{SOA} have focused on scene categorization with actions and associated objects. SOA was introduced as a multi-task multi-label dataset of social-media videos across 49 scenes with objects and actions but the taxonomy curation involves free-form tagging by human annotators followed by automatic cleanup. 
+HVU \cite{diba_large_2020}, a recently released public dataset of web videos with 248 scene labels, relied on initial tag generation based on cloud APIs followed by human verification.\\
+\textbf{Movie-centric visual scene recognition:} In the domain of scene recognition from movies, Hollywood scenes \cite{marszalek09} was first introduced with 10 scene classes extracted from headers in movie scripts across 3669 movie clips. A socially grounded approach was explored in Moviegraphs \cite{moviegraphs} with emphasis on the underlying interactions (relationships/situations) along with spatio-temporal localizations and associated visual scenes (59 classes).
+For holistic movie understanding tasks, the Movienet dataset\cite{huang2020movienet} was introduced with the largest movie-centric scene taxonomy consisting of 90 place (visual scene) tags with segment-wise human annotations of entire movies. Instead of entire movie data, short movie clips sourced from YouTube channel of Fandango Movie clips were used for text-video retrieval in Condensed movies dataset \cite{bain2020condensed}, visual semantic role labeling \cite{Sadhu_2021_CVPR} and pretraining object-centric transformers \cite{transformers} for long-term video understanding in LVU dataset \cite{lvu2021}. While there is no explicit visual scene labeling, the raw descriptions available on Youtube with the movie clips have mentions of certain visual scene classes.
+\\
+MovieCLIP, our curated dataset for visual scene context recognition, is built on top of movie clips available as a part of Condensed Movies dataset \cite{bain2020condensed}. A comparative overview of MovieCLIP and other image and video datasets with visual scene labels is shown in Table~\ref{Overview}. In comparison with previous video-centric works, our taxonomy generation relies on domain-centric data sources like movie scripts and auxiliary world knowledge from web-video-based sources like HVU with minimal human-in-the-loop supervision for taxonomy refinement.
+\begin{table*}[h!]
+\centering
+\resizebox{0.8\textwidth}{!}{
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+\textbf{Dataset} & \textbf{Domain} & \textbf{\#classes} & \textbf{\#samples} & \textbf{Annotation} & \textbf{Unit} & \textbf{AV} \\ \hline
+Scene 15 \cite{BayesianFeiFeiLi}   & Natural & 15  & $\sim$6k   & Manual & Image  & \cmark     \\ \hline
+MITIndoor67  \cite{IndoorScenes} & Natural     & 67   & 15620   & Manual  & Image &\cmark    \\ \hline
+SUN397  \cite{xiao_sun_2016}   & Natural    & 397   & 130,519  & Manual  & Image &\cmark    \\ \hline
+Places  \cite{zhou2017places}    & Natural   & 434   & 10m  & Manual  & Image & \cmark     \\ \hline
+Hollywood Scenes \cite{marszalek09}   &  Movies    & 10    & 3669   & Automatic  & Video clip (36.1s)  & \cmark  \\ \hline
+Moviegraphs  \cite{moviegraphs}    & Movies   & 59     & 7637   & Manual  & Video clip (44.28 s)  & \xmark    \\ \hline
+SOA \cite{SOA} &  Web-Videos   & 49   & 562K   & Semi-automatic  & Video clip (10 s)  &   \xmark      \\ \hline
+Movienet  \cite{huang2020movienet}  & Movies   & 90    & 42K  & Manual  & Scene segment (2 min)  & \xmark           \\ \hline
+HVU    \cite{diba_large_2020}    & Web-Videos    & 248    & 251k  & Semi-automatic &  Video clip (10 s) & \cmark    \\ \hline
+Condensed Movies \cite{bain2020condensed}   & Movies    & NA    & 33k   & Automatic  & Video clip ( 2 min) & \cmark    \\ \hline
+VidSitu  \cite{Sadhu_2021_CVPR}    & Movies  & $\sim$50    & 14k   & Manual  & Video  clip (10 s) & \cmark     \\ \hline
+LVU  \cite{lvu2021}    & Movies    & 6    & 723   & Automatic &  Video clip ($1 \sim 3$ min) & \cmark       \\ \hline
+\textbf{MovieCLIP}  & \textbf{Movies}  & \textbf{179}  & \textbf{1.12m}& \textbf{Automatic} & \textbf{Shot (3.54s) }  & \textbf{\cmark }    \\ \hline
+\end{tabular}
+}
+\vspace{5mm}
+\caption{Comparison of MovieCLIP with other available image and video datasets with visual scene classes.  \textbf{Natural}: Images of natural scenes.\textbf{Web-Videos}: videos obtained from internet sources like YouTube. \textbf{AV}: whether publicly available or not. Avg or duration span of video data sources are provided with the respective units. \textbf{NA}: Number of scene classes explicitly not mentioned with the dataset.}
+\label{Overview}
+\end{table*}
+\\
+\textbf{Knowledge transfer from pretrained multimodal models:}
+Vision language(V-L) based pretraining methods involve learning transferable visual representations based on various pretext tasks associated with image and text pairs. Examples of pretext tasks in V-L domain include prediction of masked words in captions based on visual cues in ICMLM \cite{sariyildiz2020icmlm}, pretraining image encoders based on bicaptioning objective in VirTex \cite{desai2021virtex} and contrastive alignment of image-caption pairs in CLIP \cite{CLIP}. Leveraging features from CLIP's visual and text encoders have improved existing vision-language tasks \cite{Shen2021HowMC} and enabled open-vocabulary object detection \cite{Gu2021OpenvocabularyOD}, and language-driven semantic segmentation \cite{Li2022LanguagedrivenSS}. In our work, we use the pretrained visual and text encoders of CLIP and utilize it as a noisy annotator by tagging movie shots based on our curated visual scene taxonomy.
+
+\section{Language driven taxonomy curation}
+
+Based on domain-specific challenges mentioned in Fig \ref{Intro figure}, we can see the need for a taxonomy curation phase for visual scenes in movies. In this section, we outline the process involved in curating a visual scene taxonomy based on the domain information present in movie scripts and the pre-existing scene information present in auxiliary video datasets.
+
+\subsection{Sources of visual scene information}
+Movie scripts have been used as external sources for describing and annotating videos through script and subtitle alignment methods in \cite{10.1007/978-3-540-88693-8_12}, \cite{Everingham2006HelloMN}, \cite{Laptevactionscvpr}, \cite{Rohrbach2015ADF}. Movie scripts contain \textit{sluglines} that provide information about visual scenes, time of the day, and whether the action takes place in indoor or outdoor settings.
+
+\begin{figure}[!h]
+ \centering
+  \includegraphics[width=\linewidth]{figures/sources_of_information_visual_scene_taxonomy.png}
+  \caption{Sources of visual scene information: (a) Sample slugline from a movie script that contains visual scene, time of day, and location (b) Word cloud showing the distribution of visual scene labels in HVU \cite{diba_large_2020} dataset.}
+  \label{sources of information}
+\end{figure}
+
+We parse 156k sluglines from an in-house set of 1434 movie scripts. For each slugline, we automatically extract entities after the ``\textbf{EXT.}''(exterior) or ``\textbf{INT.}''(interior) tags like \textit{Hospital room}, \textit{River}, \textit{War room} etc.
+Using this procedure, we extract 173 unique visual scene labels. Our taxonomy generation process is motivated by visual scenes in movies with sluglines from scripts as seed sources along with auxiliary sources.
+Since the set of labels from movie scripts is not exhaustive, we also consider auxiliary sources, especially web video datasets with visual scene labels like HVU \cite{diba_large_2020}. We consider HVU as source of additional labels since the taxonomy (248 visual scene classes) is semi-automatically curated for short-trimmed videos, having similar nature to movie shots. We don’t consider Places2 \cite{zhou2017places} dataset since the taxonomy is primarily curated for natural
+scenes, which are distinct from movie-centric visual scenes. Sample slugline from a movie script and a word cloud showing the distribution of visual scene labels is shown in Fig \ref{sources of information}.
+%
+
+\section{Role of multimodality - Usage of vision-language models}
+\subsection{CLIP: Learning Transferable Visual Models From Natural Language Supervision}
+\subsection{MovieCLIP dataset}
+\subsection{CLIP-based visual tagging}
+\subsection{Analysis of CLIP tagging}
+\subsection{Quality estimation through human verification}
 \section{Experiments and Results:}
 \subsection{Experimental Setup}
 \subsection{Visual scene recognition - Movies}
