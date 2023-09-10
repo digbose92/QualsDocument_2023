@@ -91,9 +91,77 @@ We parse 156k sluglines from an in-house set of 1434 movie scripts. For each slu
 Using this procedure, we extract 173 unique visual scene labels. Our taxonomy generation process is motivated by visual scenes in movies with sluglines from scripts as seed sources along with auxiliary sources.
 Since the set of labels from movie scripts is not exhaustive, we also consider auxiliary sources, especially web video datasets with visual scene labels like HVU \cite{diba_large_2020}. We consider HVU as source of additional labels since the taxonomy (248 visual scene classes) is semi-automatically curated for short-trimmed videos, having similar nature to movie shots. We don’t consider Places2 \cite{zhou2017places} dataset since the taxonomy is primarily curated for natural
 scenes, which are distinct from movie-centric visual scenes. Sample slugline from a movie script and a word cloud showing the distribution of visual scene labels is shown in Fig \ref{sources of information}.
-%
 
-\section{Role of multimodality - Usage of vision-language models}
+\subsection{Visual scene taxonomy curation}
+In order to develop a comprehensive taxonomy of visual scenes in movies, we develop an automatic way of merging taxonomies from movie sluglines and the auxiliary dataset i.e., HVU with minimal human-in-the-loop for post-processing. The broad steps involved in the taxonomy generation are listed as below:
+\par
+\textbf{Label space preprocessing:} For simplicity, we consider the set of unique labels from movie sluglines (MS) to be denoted as $L_{MS}$ and its cardinality as $N_{MS}$. Similarly we denote $N_{HVU}$ to be the cardinality of the set $L_{HVU}$, i.e., the set of unique labels from the HVU dataset. For our case, we have $N_{MS}=173$ and $N_{HVU}=248$. We extract the intersecting set of labels between $L_{MS}$ and $L_{HVU}$, denoted by the set $L_{com}$ . The number of common labels between HVU and movie slugline based taxonomy is $N_{com}=68$. We remove the common set of labels $L_{com}$ from both the label spaces of movie sluglines and HVU. This gives us a non-intersecting set of labels in movie sluglines and HVU denoted by $L_{MS} \setminus L_{Com}$  and $L_{HVU} \setminus L_{Com}$ respectively.  We combine the sets of labels i.e. $L_{MS} \setminus L_{Com}$ and $L_{HVU} \setminus L_{Com}$ to obtain a larger set of labels called $L_{NC}$, where NC refers to not common. 
+\begin{equation}
+    L_{NC}=(L_{MS} \setminus L_{Com}) \cup (L_{HVU} \setminus L_{Com})
+\end{equation}
+\par 
+\textbf{Merging with common label space:}
+In this step, we find labels in $L_{NC}$ that are semantically close to the labels in $L_{com}$. We extract dense 384D label representations using the MiniLM-L6-v2 sentence transformers model \cite{reimers-2019-sentence-bert} for labels in $L_{NC}$ and $L_{com}$. For each label in $L_{NC}$ we compute cosine similarities with set of labels in $L_{com}$ based on label representations. We merge those labels from $L_{NC}$ with the similar labels in $L_{com}$, whose top-1 cosine similarity values are greater than 0.6. We update the set of labels $L_{NC}$ to $L_{N}$ by removing the merged labels.
+Examples of such merging with respective cosine similarities and sources are as follows:
+
+\begin{itemize}
+    \item $\textbf{dune} \{L_{NC}\} \rightarrow{} \textbf{desert} \{L_{com}\} (0.66)$ 
+    \item $\textbf{tennis} \ camp \{L_{NC}\} \rightarrow{} \textbf{tennis \ court} \{L_{com}\}  (0.62)$
+    \item $\textbf{restroom} \{L_{NC}\} \rightarrow{} \textbf{bathroom} \{L_{com}\} (0.80)$
+    \item $\textbf{rural \ area} \{L_{NC}\} \rightarrow{} \textbf{village} \{L_{com}\} (0.64)$
+    \item $\textbf{boardwalk} \{L_{NC}\} \rightarrow{} \textbf{walkway} \{L_{com}\} (0.67)$
+    \item $\textbf{television \ room} \{L_{NC}\} \rightarrow{} \textbf{living \ room} \{L_{com}\} (0.67)$
+    \item $\textbf{glacial \ lake} \{L_{NC}\} \rightarrow{} \textbf{lake} \{L_{com}\} (0.73)$
+\end{itemize}
+
+\begin{figure}[h!]
+\centering
+%\subfloat[]{%
+\includegraphics[width=0.6\columnwidth]{figures/share_of_labels.png}%
+\caption{
+The share of different sources (\textbf{HVU}, \textbf{Movie Sluglines}, \textbf{Common labels and Human expert}) in curating the label taxonomy. Example labels from different sources are shown in boxes with the pie chart.
+}
+\label{label distribution}
+\end{figure}
+\textbf{Human-in-the-loop taxonomy refinement:} 
+A human expert inspects the labels in $L_{N}$ and removes both generic scene labels such as \textit{body of water}, \textit{coastal and oceanic landforms}, \textit{horizon}, \textit{landscape}, \textit{underground} as well as highly specific scenes such as \textit{coral reef}, \textit{white house}, \textit{piste}, \textit{badlands} etc. We use label representations from the previous step to exploit semantic similarity between the labels remaining in $L_{N}$.
+For each relevant label in $L_{N}$, a threshold of 0.7 on top-1 similarity score is used to filter out similar labels. While comparing two similar labels, the human expert relies on wiki definitions to merge the more specific label into the generic one. For example, by definition \textit{bazaar} is a special form of market selling local items (as per wiki) and therefore merged with the \textit{market}. Other examples include:
+\begin{itemize}
+    \item $\{stream, river bed, creek, river\} \rightarrow{} river$ 
+    \item $\{hill, mountain, mountain \ pass, mountain \ range\} \\ \rightarrow{} mountain$
+    \item $\{road, road \ highway, lane \} \rightarrow{} road$
+    \item $\{port, marina \ dock, harbor \} \rightarrow{} harbor$
+\end{itemize}
+This results in a set of labels called $L_{merge}$ from $L_{N}$. Further, The human expert is exposed to randomly sampled 1000 shots from movie clips in Condensed Movies \cite{bain2020condensed} and reviews the current set of labels in the set $L_{merge} \cup L_{com}$. Based on the video content, a set of scene labels ($L_{human}$) that are missing from the current set is added by human expert. Thus the final set of 179 visual scene labels is obtained as follows:
+\begin{equation}
+     L_{final}=L_{com}\cup L_{merge} \cup L_{human}
+\end{equation}
+\textbf{Label source distribution:} As shown in Fig. \ref{label distribution}, the largest share is from movie sluglines (39\%).Only 9\% of the total labels is provided through feedback from human expert. Instead of manually binning classes into broad categories like indoor, outdoor or man-made, we discover groupings among classes through Affinity propagation clustering \cite{brendanfrey}  (based on label representations from sentence transformers). Certain clusters of visual scene labels are listed below, where all the sport locations, water bodies and performing arts locations are grouped together.
+\begin{itemize}
+    \item \textbf{sport locations:} Basketball court, Race track, Tennis court, Batting cage, Golf course
+    \item \textbf{water bodies:} River, Pool, Waterfall, Hot spring, Pond, Swamp, Lake
+    \item \textbf{performing arts locations:} Stage, Conference Room, Theater, Auditorium, Ballroom
+    \item \textbf{Natural landforms:} Mountain, Desert, Valley
+\end{itemize}
+For visualizing certain groups of visual scene classes that are semantically close to each other, we use tSNE \cite{tSNE} to project the 384 D label embeddings obtained through MiniLM-L6-v2 sentence transformers model \cite{reimers-2019-sentence-bert} to 2 dimensions. Examples include the visual scene classes associated with \textbf{study}, \textbf{water bodies} , \textbf{medical scene classes}, \textbf{natural landforms}, \textbf{automobile-based scene classes}, \textbf{dining-scene classes}.
+\begin{figure*}[h!]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/tsne_hvu_slugline_combined.png}
+    \caption{TSNE plot of the 179 scene classes in the taxonomy. Certain representative groups of visual scene labels that are semantically close to each other are enclosed by circular/oval shapes. }
+    \label{tsneplot}
+\end{figure*}
+
+\section{Role of multi-modality - Usage of vision-language models}
+
+Since the manual tagging of Condensed Movies \cite{bain2020condensed} is not feasible due to the duration of data involved, i.e., \textbf{1106 hrs},  we ask the following question:  \textit{Can we use additional knowledge sources to provide weak guidance for the tagging task ?}. In this case, we leverage the pretrained knowledge available as part of CLIP \cite{CLIP}'s vision and language encoders to provide weak guidance for visual scene labeling. 
+
+\begin{figure}[h!]
+\centering
+  \includegraphics[width=\linewidth]{figures/CLIP_outline_diagram.png}
+  \caption{1. Contrastive pretraining framework associated with CLIP. 2. Usage of CLIP's pretrained vision and text encoders for zero-shot classification. Image source: \cite{CLIP}}
+  \label{CLIP outline}
+\end{figure}
+
 \subsection{CLIP: Learning Transferable Visual Models From Natural Language Supervision}
 \subsection{MovieCLIP dataset}
 \subsection{CLIP-based visual tagging}
