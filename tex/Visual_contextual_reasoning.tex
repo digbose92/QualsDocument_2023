@@ -161,8 +161,9 @@ Since the manual tagging of Condensed Movies \cite{bain2020condensed} is not fea
   \caption{1. Contrastive pretraining framework associated with CLIP. 2. Usage of CLIP's pretrained vision and text encoders for zero-shot classification. Image source: \cite{CLIP}}
   \label{CLIP outline}
 \end{figure}
+We utilize the pretrained knowledge available in CLIP for weakly tagging the movie video clips with scene labels from our curated taxonomy. 
+CLIP utilizes internet-scale data, i.e., image-text pairs, to pre-train two visual and text transformer \cite{transformers} encoders for weak-alignment pretext task. Based on the large batch size of 32,768 image-text pairs, the proxy training task is defined as follows: \textit{given an image, predict which out of a set of 32,768 randomly sampled text snippets, was actually paired with it in our dataset ?}. This pretext task enables the application of CLIP encoders to a wide variety of visual classification tasks since the visual concepts need to be associated with different class names. Thus, CLIP's text and visual encoders can be utilized as weak taggers for different image classification tasks. In the following section, we outline how CLIP's pretrained encoders are used for tagging shots in Condensed movies dataset \cite{bain2020condensed}.
 
-\subsection{CLIP: Learning Transferable Visual Models From Natural Language Supervision}
 \subsection{MovieCLIP dataset}
 \subsection{CLIP-based visual tagging}
 \subsection{Analysis of CLIP tagging}
