@@ -162,11 +162,76 @@ Since the manual tagging of Condensed Movies \cite{bain2020condensed} is not fea
   \label{CLIP outline}
 \end{figure}
 We utilize the pretrained knowledge available in CLIP for weakly tagging the movie video clips with scene labels from our curated taxonomy. 
-CLIP utilizes internet-scale data, i.e., image-text pairs, to pre-train two visual and text transformer \cite{transformers} encoders for weak-alignment pretext task. Based on the large batch size of 32,768 image-text pairs, the proxy training task is defined as follows: \textit{given an image, predict which out of a set of 32,768 randomly sampled text snippets, was actually paired with it in our dataset ?}. This pretext task enables the application of CLIP encoders to a wide variety of visual classification tasks since the visual concepts need to be associated with different class names. Thus, CLIP's text and visual encoders can be utilized as weak taggers for different image classification tasks. In the following section, we outline how CLIP's pretrained encoders are used for tagging shots in Condensed movies dataset \cite{bain2020condensed}.
+CLIP utilizes internet-scale data, i.e., image-text pairs, to pre-train two visual and text transformer \cite{transformers} encoders for weak-alignment pretext task. Based on the large batch size of 32,768 image-text pairs, the proxy training task is defined as follows: \textit{given an image, predict which out of a set of 32,768 randomly sampled text snippets, was actually paired with it in our dataset ?}.  Since CLIP has been trained in a contrastive manner for alignment, it can be used to develop zero-shot classifiers for different tasks including scene recognition (\cite{xiao_sun_2016}), fine-grained classification (\cite{parkhi12a}, \cite{bossard14}, \cite{KrauseStarkDengFei-Fei_3DRR2013}), facial emotion recognition (\cite{BarsoumICMI2016}), object (\cite{Deng2009ImageNetAL},\cite{FeiFei2004LearningGV}) and action classification (\cite{Kinetics700},\cite{ucf101}).
 
-\subsection{MovieCLIP dataset}
-\subsection{CLIP-based visual tagging}
+In the following section, we outline how CLIP's pretrained encoders are used for tagging shots in the Condensed movies dataset \cite{bain2020condensed} to obtain a curated shot-centric dataset called \textbf{MovieCLIP} with visual scene labels.
+
+\section{MovieCLIP dataset}
+
+\subsection{Shot detection from movie clips}
+Since a shot represents a continuous set of frames with minimal change in the visual scene, we consider movie shots for our subsequent analysis. Associating visual scene labels to shots can help in identifying cases where visual scene recognition is difficult like closeup or extreme closeup scenarios, even within the same movie scene. A singular movie scene involves changes in camera viewpoints across consecutive shots, thus making it difficult for CLIP to associate labels with high confidence for the entire movie scene.
+For shot detection, we use PySceneDetect\footnote{https://pyscenedetect.readthedocs.io/en/latest/} to segment the movie clips in Condensed Movies with default parameters and content-aware detection mode. The overall statistics of the shot extraction process is shown in Table \ref{shot stats table}:
+
+\begin{table}[h!]
+\centering 
+\resizebox{\columnwidth}{!}{
+\begin{tabular}{|l|c|l|l|l|l|l|}
+\hline
+\textbf{\# movies} & \textbf{Years} & \textbf{\# clips}    & \textbf{\# shots} & \textbf{Avg shots/clip} & \textbf{Avg Duration}       \\ \hline
+\multicolumn{1}{|c|}{3574} & 1930-2019      & \multicolumn{1}{c|}{32484} & 1124638           & \multicolumn{1}{c|}{34.66}&3.54s \\ \hline
+\end{tabular}
+}
+\vspace{1mm}
+\caption{Statistics of movie shots in MovieCLIP dataset.}
+\label{shot stats table}
+\end{table}
+
+\subsection{CLIP-based visual scene labeling of movie shots}
+In this section, we describe how CLIP \cite{CLIP} can be used to associate visual scene labels with individual movie shots. Based on prompt engineering designs considered by GPT3 \cite{GPT3}, addition of contextual phrases like \textit{\textbf{``a type of pet"}} or \textit{\textbf{``a type of food"}} in the prompts provides additional information for CLIP for zero shot classification. In a similar vein, we consider the visual scene specific prompt: \textit{\textbf{``A photo of a \{label\}, a type of background location"}} to tag individual frames in video clips with labels from our scene taxonomy. If a shot contains $T$ frames, we utilize CLIP's visual encoder to extract frame-wise visual embeddings $v_{t}(t=1,...,T)$. For each of the individual scene labels in our taxonomy, we utilize CLIP's text encoder to extract embeddings $e_{l} (l=1,2,...,L)$ for the background-specific prompts 
+We use the label-wise (prompt-specific) text and frame-wise visual embeddings to obtain a similarity score matrix $S$, whose entries $S_{lt}$ are computed as follows:
+\begin{equation}\label{simmatrixscore}
+    S_{lt}=\frac{e_{l}^{T}v_{t}}{\lVert e_{l}  \rVert_{2}  \lVert v_{t} \rVert_{2}}
+\end{equation}
+We compute an aggregate shot-specific score for individual scene labels by temporal average pooling over the similarity matrix $S_{lt}$, since the visual content within a shot remains fairly unchanged. The computation of shot-specific score called $\texttt{CLIPSceneScore}_{\texttt{l}}$ for $l$th visual scene label is shown in Eq.~\ref{score pooling}.
+Overall workflow of the process is illustrated in Fig \ref{clip tagging}.
+\begin{equation}
+    \texttt{CLIPSceneScore}_{\texttt{l}}=\frac{\sum_{t=0}^{T}(S_{lt})}{T}
+    \label{score pooling}
+\end{equation}
+\begin{figure*}[h]
+\centering
+\includegraphics[width=\textwidth]{figures/MovieCLIP_tagging.pdf} %0.8\textwidth
+\caption{Overview schematic of the prompt-based visual scene labeling of movie shot using CLIP's visual and text encoders. $S$ is the similarity matrix where entry $S_{lt}$ refers to similarity values between textual embedding $e_{l}$ and visual embedding $v_{t}$.}
+\label{clip tagging}
+\end{figure*}
+
 \subsection{Analysis of CLIP tagging}
+\begin{figure}[h!]
+\centering
+\subfloat[]{%
+\includegraphics[width=0.5\textwidth]{figures/CLIP_high_confidence.png}% 
+\label{clip high conf}
+}
+
+\subfloat[]{%
+\includegraphics[width=0.5\textwidth]{figures/CLIP_bad_samples_v2.pdf}%
+\label{clip low conf}
+}
+\caption{(a) Sample frames from the movie shots labeled by CLIP with high confidence (\texttt{CLIPSceneScore} $\geq$ 0.6 and Labels shown in yellow) (b) Sample frames from the movie shots tagged by CLIP with low confidence (Labels shown in yellow).}
+\label{combined slulgline and image datasets}
+\end{figure}
+As shown in Fig \ref{clip high conf}, CLIP performs well when distinctive elements of visual scene are present like background objects in indoor locations (living room) or appearance-based cues (green color background for forests).
+For example in  \ref{clip high conf}, the presence of airplane windows indicates that the associated visual scene label with the given movie shot is cockpit. However, for shots involving blurry motion or absence of background information due to the close up of the involved characters, CLIP's confidence in associating visual scene labels is low (Fig \ref{clip low conf}).
+\\
+\textbf{Genre-wise association:} 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{figures/genre_wise_distribution_plots_clip_label.png}
+    \caption{Genre wise distribution of different scene labels. For each genre, the top-5 scene labels are shown in terms of number of occurrences in the top-1 label provided by CLIP \cite{CLIP} for shots in MovieCLIP dataset. Threshold for confidence score of top-1 label = 0.4}
+    \label{genre distribution}
+\end{figure}
+We consider those shots whose top-1 $\texttt{CLIPSceneScore}$ values are greater than or equal to 0.4 and show the top-5 scene labels in terms of occurrences for certain genres like \textit{western}, \textit{sport}, \textit{war} and \textit{musical}.  From Fig \ref{genre distribution}, we can see that relevant scenes are associated with genres through CLIP's labeling scheme. Some notable examples include \{shooting range, desert\} for \textit{western}, \{locker room, boxing ring\} for \textit{sport}, \{ballroom, stage\}  for \textit{musical} and \{cockpit, battlefield\} for \textit{war}.
+
 \subsection{Quality estimation through human verification}
 \section{Experiments and Results:}
 \subsection{Experimental Setup}
