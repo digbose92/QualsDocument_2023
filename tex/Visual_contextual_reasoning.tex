@@ -187,6 +187,12 @@ For shot detection, we use PySceneDetect\footnote{https://pyscenedetect.readthed
 \end{table}
 
 \subsection{CLIP-based visual scene labeling of movie shots}
+\begin{figure*}[h]
+\centering
+\includegraphics[width=\textwidth]{figures/MovieCLIP_tagging_image.png} %0.8\textwidth
+\caption{Overview schematic of the prompt-based visual scene labeling of movie shot using CLIP's visual and text encoders. $S$ is the similarity matrix where entry $S_{lt}$ refers to similarity values between textual embedding $e_{l}$ and visual embedding $v_{t}$.}
+\label{clip tagging}
+\end{figure*}
 In this section, we describe how CLIP \cite{CLIP} can be used to associate visual scene labels with individual movie shots. Based on prompt engineering designs considered by GPT3 \cite{GPT3}, addition of contextual phrases like \textit{\textbf{``a type of pet"}} or \textit{\textbf{``a type of food"}} in the prompts provides additional information for CLIP for zero shot classification. In a similar vein, we consider the visual scene specific prompt: \textit{\textbf{``A photo of a \{label\}, a type of background location"}} to tag individual frames in video clips with labels from our scene taxonomy. If a shot contains $T$ frames, we utilize CLIP's visual encoder to extract frame-wise visual embeddings $v_{t}(t=1,...,T)$. For each of the individual scene labels in our taxonomy, we utilize CLIP's text encoder to extract embeddings $e_{l} (l=1,2,...,L)$ for the background-specific prompts 
 We use the label-wise (prompt-specific) text and frame-wise visual embeddings to obtain a similarity score matrix $S$, whose entries $S_{lt}$ are computed as follows:
 \begin{equation}\label{simmatrixscore}
@@ -198,21 +204,38 @@ Overall workflow of the process is illustrated in Fig \ref{clip tagging}.
     \texttt{CLIPSceneScore}_{\texttt{l}}=\frac{\sum_{t=0}^{T}(S_{lt})}{T}
     \label{score pooling}
 \end{equation}
-\begin{figure*}[h]
-\centering
-\includegraphics[width=\textwidth]{figures/MovieCLIP_tagging.pdf} %0.8\textwidth
-\caption{Overview schematic of the prompt-based visual scene labeling of movie shot using CLIP's visual and text encoders. $S$ is the similarity matrix where entry $S_{lt}$ refers to similarity values between textual embedding $e_{l}$ and visual embedding $v_{t}$.}
-\label{clip tagging}
+
+\subsection{Prompt design choices}
+In terms of prompt designs, we consider the following templates customized for generic background information:
+\begin{itemize}
+    \item \textit{A photo of \{\}, a type of background location}
+    \item \textit{A photo of \{\}, a type of location}
+\end{itemize}
+Since multiple shots consider people in focus, we also consider the following people-centric prompt templates:
+
+\begin{itemize}
+    \item \textit{People at \{\}, a type of background location}
+    \item \textit{People at \{\}, a type of location}
+\end{itemize}
+
+As shown in Fig \ref{Combined Prompt Setup}, the prompts associated with generic background information tend to perform better in terms of associating visual scene labels to movie shots with higher confidence, when compared with people-centric prompts. Further inclusion of the contextual phrase \textit{"a type of background location"} tends to perform better than \textit{"a type of location"} in associating top-1 visual scene labels with higher $\texttt{CLIPSceneScore}$ values. When people-centric prompts are used, the CLIP based labeling scheme can result in incorrect associations like interrogation room in Fig \ref{Combined Prompt Setup} (a) and cockpit in Fig \ref{Combined Prompt Setup} (c). Hence we consider \textit{A photo of \{\}, a type of background location} as our final prompt choice.
+\begin{figure*}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{figures/Prompt_Design_combined_updated.pdf}
+    \caption{Examples of various prompt templates and associated CLIPSceneScores for top-k visual scene labels. Here k=5}
+    \label{Combined Prompt Setup}
 \end{figure*}
 
 \subsection{Analysis of CLIP tagging}
+
+\subsubsection{Qualitative examples}
+
 \begin{figure}[h!]
 \centering
 \subfloat[]{%
 \includegraphics[width=0.5\textwidth]{figures/CLIP_high_confidence.png}% 
 \label{clip high conf}
 }
-
 \subfloat[]{%
 \includegraphics[width=0.5\textwidth]{figures/CLIP_bad_samples_v2.pdf}%
 \label{clip low conf}
@@ -227,15 +250,95 @@ For example in  \ref{clip high conf}, the presence of airplane windows indicates
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\columnwidth]{figures/genre_wise_distribution_plots_clip_label.png}
-    \caption{Genre wise distribution of different scene labels. For each genre, the top-5 scene labels are shown in terms of number of occurrences in the top-1 label provided by CLIP \cite{CLIP} for shots in MovieCLIP dataset. Threshold for confidence score of top-1 label = 0.4}
+    \caption{Genre-wise distribution of different scene labels. For each genre, the top-5 scene labels are shown in terms of the number of occurrences in the top-1 label provided by CLIP \cite{CLIP} for shots in the MovieCLIP dataset. Threshold for confidence score of top-1 label = 0.4}
     \label{genre distribution}
 \end{figure}
 We consider those shots whose top-1 $\texttt{CLIPSceneScore}$ values are greater than or equal to 0.4 and show the top-5 scene labels in terms of occurrences for certain genres like \textit{western}, \textit{sport}, \textit{war} and \textit{musical}.  From Fig \ref{genre distribution}, we can see that relevant scenes are associated with genres through CLIP's labeling scheme. Some notable examples include \{shooting range, desert\} for \textit{western}, \{locker room, boxing ring\} for \textit{sport}, \{ballroom, stage\}  for \textit{musical} and \{cockpit, battlefield\} for \textit{war}.
 
+\subsubsection{Shot type distribution:}
+We analyze the distribution of shot types in terms of scale for samples extracted from Condensed Movies dataset \cite{bain2020condensed}. We consider the shot scale type taxonomy in MovieShots \cite{rao2020unified} dataset as follows:
+
+\begin{itemize}
+    \item \textbf{Long shot (LS):} Shot taken from long distance like quarter of a mile and having least person close up.
+    \item \textbf{Full shot (FS):} Shot showing the entire human body.
+    \item \textbf{Medium shot (MS):} Shot showing the humans from knees or waist up.
+    \item \textbf{Close-up shot (CS):} Shot focussed on a small segment like face of a person.
+    \item \textbf{Extreme close-up shot (ECS):} Shot showing smaller regions like image of eye or mouth.
+\end{itemize}
+
+We use the samples in the MovieShots dataset to train a 2-layer LSTM \cite{lstm} network (hidden dimension = 512) to classify between 5 scale classes. For individual shots, we extract frame-wise features from pretrained ViT-B/16 \cite{dosovitskiy2020vit} network at 4 fps for inputs to the LSTM network. For training, validation and testing we use a split of 23557, 6764, and 3332 shots. We use the trained model to predict the shot scale labels for the samples in the MovieCLIP dataset.
+\par 
+From Figure \ref{shot scale distribution} (a), we can see that for low-confidence shots in MovieCLIP dataset having top-1 \texttt{CLIPSceneScore} $<=0.2$, significant proportion (86\%) have person close-up ranging from moderate (\textbf{MS}) to very high (\textbf{ECS}). When combined, Close-up (\textbf{CS}) and extreme close-up (\textbf{ECS}) shots constitute 50\% of total samples having top-1 \texttt{CLIPSceneScore} $<=0.2$. However for high confidence shot samples in MovieCLIP, whose top-1 \texttt{CLIPSceneScore} values are greater than 0.4, the combined share of \textbf{CS} and \textbf{ECS} scale labels decreases to 24\%. Further, the combined share of \textbf{FS} and \textbf{LS} rises from 14\% in Fig \ref{shot scale distribution} (a) to 35\% in Fig \ref{shot scale distribution} (b). 
+This indicates that a major share of the shot samples having low  \texttt{CLIPSceneScore} values have high(\textbf{CS}) to very high (\textbf{ECS}) person close-up. Whereas the increasing share of \textbf{FS} and \textbf{LS} scale labels in Fig \ref{shot scale distribution} shows that CLIP needs more background information in the shots to tag visual scenes with high confidence.
+\begin{figure*}[h!]
+\centering
+\subfloat[]{%
+\includegraphics[width=0.45\textwidth]{figures/wedge_plot_low_threshold_sample.png}
+\label{}
+}\hfill
+\subfloat[]{%
+\includegraphics[width=0.5\textwidth]{figures/wedge_plot_high_threshold_shot_sample.png}
+\label{clip low conf}
+}
+\caption{(a) Distribution of predicted scale labels for shots (N=745059) in MovieCLIP dataset having top-1 \texttt{CLIPSceneScore} $<=0.2$(b) Distribution of predicted scale labels for shots (N=107420) in MovieCLIP dataset having top-1 \texttt{CLIPSceneScore} $>=0.4$ and top-k \texttt{CLIPSceneScore} $>=0.1$ (\texttt{k=2,3,4,5}). Scale labels include : \textbf{ECS}: Extreme Close-up shot, \textbf{CS}: Close-up shot, \textbf{MS}: Medium shot, \textbf{LS}: Long shot, \textbf{FS}: Full shot.}
+\label{shot scale distribution}
+\end{figure*}
 \subsection{Quality estimation through human verification}
+In order to estimate the reliability of the top-k labels provided by CLIP for movie shots, we conducted a verification task on Amazon Mechanical Turk. We provided a pool of annotators with a subset of 2393 movie shots from VidSitu \cite{Sadhu_2021_CVPR} dataset, along with top-5 scene labels. As shown in Fig \ref{mturk experiment},  if none of the scene labels appear relevant for the given movie shot, the annotators choose the \textbf{Not relevant} option.  After the human verification experiment is complete, we discard the shot samples with no agreements and obtain evaluation data consisting of 1883 shot samples. We also use the LSTM model pretrained on MovieShots dataset to predict shot types for samples that have no agreements with human experts. The distribution of shot-wise predictions from the trained LSTM model is shown in Fig \ref{shot_type_distribution}. We can see that 80\% of shots having no agreements with human annotations belong to the shot categories having moderate (MS) to very high person closeup (ECS). 
+\begin{figure*}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/verification_experiment.pdf}
+    \caption{Schematic design of the mturk experiment used for human verification of visual scenes.}
+    \label{mturk experiment}
+\end{figure*}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/Shot_type_distribution_discarded_shots.png}
+    \caption{Distribution of shot scale predictions among the shots having no agreements between human annotators and CLIP's labeling scheme. \textbf{ECS}: Extreme Close-up shot, \textbf{CS}: Close-up shot, \textbf{MS}: Medium shot, \textbf{LS}: Long shot, \textbf{FS}: Full shot}
+    \label{shot_type_distribution}
+\end{figure}
+
 \section{Experiments and Results:}
+
 \subsection{Experimental Setup}
+For training and validation purposes, we retain those shot samples whose top-1 $\texttt{CLIPSceneScore}$ is greater than or equal to 0.4 (approx 75 percentile), resulting in a clean subset. After top-1 filtering, we also consider labels from top-k (k = 2 to 5) whose $\texttt{CLIPSceneScore}$ is greater than 0.1 to associate multiple labels per sample.
+This results in a set of \textbf{107k} samples with train, val and test split of \textbf{73.8k}, \textbf{23.2k} and \textbf{10.3k} having non-intersecting set of ids with the human-verified evaluation set. Approximately \textbf{38.4\%} of the dataset is multi-label, covering 150 scene classes out of 179 in the curated scene taxonomy. 
+All the related experiments were conducted using the Pytorch\cite{Pytorch} framework using 4 T4 NVIDIA GPUs. For training the respective models, we use binary cross entropy loss function. For evaluation, we use \textbf{mean average precision (mAP)} and \textbf{Pearson correlation} (averaged across samples) as metrics.
+
+
 \subsection{Visual scene recognition - Movies}
+\textbf{Frame-wise aggregation models:} For frame-wise aggregation, we extract dense embeddings from individual shots at 4fps. We use two sets of embeddings: 512 dim embedding from Resnet18 \cite{He2015} pretrained on Places2 dataset and 768 dim embedding from ViT-B/16 \cite{dosovitskiy2020vit} model pretrained on Imagenet \cite{Deng2009ImageNetAL}.
+Following feature extraction, we perform temporal aggregation using LSTM \cite{lstm} with 2 layers and hidden dimension of 512.
+\\
+\textbf{3D Convolutional network models:} 
+We use I3D\cite{i3d}, R(2+1)D \cite{r2plus1d}, Slowfast \cite{feichtenhofer2019slowfast} as baseline 3D convolutional models in multi-label setup. I3D\cite{i3d} and Slowfast\cite{feichtenhofer2019slowfast} models have a Resnet50\cite{He2015} backbone whereas R(2+1)D \cite{r2plus1d} has a Resnet34\cite{He2015} backbone. All the models are initialized from Kinetics400 \cite{kinetics400} pretrained weights. For finetuning I3D\cite{i3d} and Slowfast\cite{feichtenhofer2019slowfast}, we use SGD with learning rates in $\{0.1,1e-3\}$ and weight decay of 1e-4. For R(2+1)D \cite{r2plus1d} we use Adam \cite{Kingma2015AdamAM} with learning rate 1e-4. Batch sizes for the models are varied between 16 and 32. \\
+\textbf{Video Transformer models:}
+For video transformer models, we consider the base TimeSformer model \cite{Bertasius2021IsSA} that considers 8 frames (224 x 224) as inputs. For finetuning TimeSformer \cite{Bertasius2021IsSA} model, we use SGD with learning rate 5e-3 and weight decay of 1e-4 and batch size of 8. For better speed-accuracy tradeoff we use the Video Swin Transformer model \cite{liu2021video}, \cite{liu2021Swin} called Swin-B with clip size of 32 frames (224 x 224) as inputs. For finetuning we use AdamW \cite{Loshchilov2019DecoupledWD} optimizer with learning rate 1e-4 and Cosine Annealing with batch size of 32. 
+\par 
+Based on the results in Table \ref{visual movie models}, we can see that 2-layer LSTM model trained using features from Imagenet-21K pretrained ViT-B/16 performs better compared to features extracted using Resnet-18 model pretrained on Places2 dataset. This shows that features from Places2 pretrained models might not be optimal for scene recognition in the movie domain.
+In terms of end-to-end models, video transformers, including TimeSformer and Swin-B models outperform 3D convolutional models. Swin-B model performs better than other models by obtaining an average correlation of \textbf{0.497} and mean average precision of \textbf{44.4}.
+\begin{table}[h!]
+\centering
+\resizebox{0.7\columnwidth}{!}{
+\begin{tabular}{|cccc|}
+\hline
+\multicolumn{4}{|c|}{\textbf{Frame wise aggregation}}                                                                         \\ \hline
+\multicolumn{1}{|c|}{Model}                & \multicolumn{1}{c|}{Features}         & \multicolumn{1}{c|}{mAP}   & Correlation \\ \hline
+\multicolumn{1}{|l|}{LSTM (512, 2 layers)} & \multicolumn{1}{c|}{Places2 (4 fps)}  & \multicolumn{1}{c|}{24.15} & 0.29        \\ \hline
+\multicolumn{1}{|l|}{LSTM (512, 2 layers)} & \multicolumn{1}{l|}{ViT-B/16 (4 fps)} & \multicolumn{1}{c|}{43.10} & 0.42        \\ \hline
+\multicolumn{4}{|c|}{\textbf{3D convolutional networks}}                                                                      \\ \hline
+\multicolumn{1}{|c|}{Model}                & \multicolumn{1}{c|}{Features}         & \multicolumn{1}{c|}{mAP}   & Correlation \\ \hline
+\multicolumn{1}{|c|}{SlowFast (R50) \cite{feichtenhofer2019slowfast}}       & \multicolumn{1}{c|}{NA}               & \multicolumn{1}{c|}{25.80}      &   0.402         \\ \hline
+\multicolumn{1}{|c|}{R(2+1)D (R34) \cite{r2plus1d} }        & \multicolumn{1}{c|}{NA}               & \multicolumn{1}{c|}{26.73} & 0.40        \\ \hline
+\multicolumn{1}{|c|}{I3D (R50) \cite{i3d}}            & \multicolumn{1}{c|}{NA}               & \multicolumn{1}{l|}{13.33} & 0.26        \\ \hline
+\multicolumn{4}{|c|}{\textbf{Video Transformers}}                                                                             \\ \hline
+\multicolumn{1}{|c|}{TimeSformer \cite{Bertasius2021IsSA}}          & \multicolumn{1}{c|}{NA}               & \multicolumn{1}{l|}{36.87} & 0.46        \\ \hline
+\multicolumn{1}{|c|}{\textbf{Swin-B} \cite{liu2021video}}             & \multicolumn{1}{c|}{\textbf{NA}}              & \multicolumn{1}{c|}{\textbf{44.4}}  & \textbf{0.497}       \\ \hline
+\end{tabular}}
+\vspace{1mm}
+\caption{Mean average precision (mAP) and average Spearman correlation of different models on human verified evaluation set (N=1883 shots). NA: End-to-end models used instead of features. For 3D conv models, the backbone network is mentioned inside brackets. }
+\label{visual movie models}
+\end{table}
 \subsection{Downstream tasks}
 \subsubsection{Visual scene recognition - web videos}
 \subsubsection{Multi label genre classification - movie trailers}
