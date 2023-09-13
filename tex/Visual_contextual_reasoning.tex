@@ -2,19 +2,17 @@
 
 In this chapter, we consider the task of recognizing visual scene context in media content by leveraging pre-trained multimodal information.  
 \section{Role of scene as contextual signal}
-Visual scene context refers to the global context in the image, including the relationship of the target objects with the environment/location and other co-occurring objects \cite{Bar2004VisualOI}, \cite{Qiao2021ObjectLevelSC}. Visual scene context drives the likelihood of finding particular objects spatially co-located with each other. For example, as shown in Fig \ref{station_kitchen}, utensils are more likely to be present in the kitchen as compared to the train station. 
-Apart from the domain of natural scenes, understanding the visual scene context is also important in the case of media content \cite{CMI} esp. movies and curated short content like advertisements. 
-\par
-In cinematic terms, \textit{mis-en-scene} \cite{Bordwell1979FilmAA} refers to how the different elements of a film are depicted and arranged in front of camera. Key components of \textit{mis-en-scene} include the actors with their different styles, \textbf{visual scenes} where the interactions take place, set design including lighting and camera placement, and the accompanying costumes and makeup of the artists. The visual scene is considered a crucial component since it sets the mood and provides a background for the various actions performed by the actors in the scene. Visual scenes in movies are often tied to social settings like weddings, birthday parties, and workplace gatherings that provide information about character interactions. Accurate recognition of visual scenes can help in uncovering the bias involved in the portrayal of under-represented characters vis-a-vis different scenes, e.g., fewer women shown in the office as compared to the kitchen. For content tagging tasks like genre classification, visual scenes provide context information like battlefield portrayals in action/adventure movies, space-shuttle in sci-fi movies, or courtrooms in dramas.
-\par 
-In the following section, we highlight certain challenges associated with visual scene recognition, especially w.r.t. movies.
 \begin{figure}[h!]
     \centering 
      \includegraphics[width=0.6\linewidth]{figures/train_station_kitchen.png}
      \caption{Difference between visual scenes - train station and kitchen in terms of object placements.}
      \label{station_kitchen}
 \end{figure}
-% Use reference: \textit{Structure Inference Net: Object Detection Using Scene-Level Context and Instance-Level Relationships} here.
+Visual scene context refers to the global context in the image, including the relationship of the target objects with the environment/location and other co-occurring objects \cite{Bar2004VisualOI}, \cite{Qiao2021ObjectLevelSC}. Visual scene context drives the likelihood of finding particular objects spatially co-located with each other. For example, as shown in Fig \ref{station_kitchen}, utensils are more likely to be present in the kitchen as compared to the train station. 
+Apart from the domain of natural scenes, understanding the visual scene context is also important in the case of media content \cite{CMI} esp. movies and curated short content like advertisements. 
+\par
+In cinematic terms, \textit{mis-en-scene} \cite{Bordwell1979FilmAA} refers to how the different elements of a film are depicted and arranged in front of camera. Key components of \textit{mis-en-scene} include the actors with their different styles, \textbf{visual scenes} where the interactions take place, set design including lighting and camera placement, and the accompanying costumes and makeup of the artists. The visual scene is considered a crucial component since it sets the mood and provides a background for the various actions performed by the actors in the scene. Visual scenes in movies are often tied to social settings like weddings, birthday parties, and workplace gatherings that provide information about character interactions. Accurate recognition of visual scenes can help uncover the bias involved in the portrayal of under-represented characters vis-a-vis different scenes, e.g., fewer women shown in the office as compared to the kitchen. For content tagging tasks like genre classification, visual scenes provide context information like battlefield portrayals in action/adventure movies, space-shuttle in sci-fi movies, or courtrooms in dramas.
+In the following section, we highlight certain challenges associated with visual scene recognition, especially w.r.t. movies.
 \section{Movies vs Natural scenes}
 Visual scene recognition, in the case of static images, is primarily driven by natural scenes due to large-scale datasets like SUN397 \cite{Xiao2010SUNDL} and Places-2\cite{zhou2017places}. However, there are certain inherent challenges in visual scene recognition for movies that need to be addressed, as shown in Fig \ref{Intro figure}.
 \begin{figure}[!h]
@@ -103,7 +101,6 @@ In order to develop a comprehensive taxonomy of visual scenes in movies, we deve
 \textbf{Merging with common label space:}
 In this step, we find labels in $L_{NC}$ that are semantically close to the labels in $L_{com}$. We extract dense 384D label representations using the MiniLM-L6-v2 sentence transformers model \cite{reimers-2019-sentence-bert} for labels in $L_{NC}$ and $L_{com}$. For each label in $L_{NC}$ we compute cosine similarities with set of labels in $L_{com}$ based on label representations. We merge those labels from $L_{NC}$ with the similar labels in $L_{com}$, whose top-1 cosine similarity values are greater than 0.6. We update the set of labels $L_{NC}$ to $L_{N}$ by removing the merged labels.
 Examples of such merging with respective cosine similarities and sources are as follows:
-
 \begin{itemize}
     \item $\textbf{dune} \{L_{NC}\} \rightarrow{} \textbf{desert} \{L_{com}\} (0.66)$ 
     \item $\textbf{tennis} \ camp \{L_{NC}\} \rightarrow{} \textbf{tennis \ court} \{L_{com}\}  (0.62)$
@@ -389,7 +386,12 @@ We train 3 layer fully connected models on the respective features with the foll
 Even when the number of trailer videos used is a subset of the original split, $M_{trailer}$ exhibits similar genre-wise trends as other models. From Table \ref{genre}, we can see that $M_{trailer}$ shows better performance in Animation and Comedy as compared to genres like Biography and Mystery. When compared with fstTConv in Table \ref{genre}, our fully connected model $M_{trailer}$ performs slightly worse due to non-availability of entire training data. 
 
 \subsubsection{Impact of MovieCLIP pretraining}
-
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/scene_gt_base_model_updated_legend.png}
+    \caption{Sample scene classes in HVU where $M_{scene}$ performs better in comparison to $M_{scene}(Kin)$}. 
+    \label{scenegtbase}
+\end{figure}
 \begin{table}[h!]
 \centering
 \resizebox{0.6\columnwidth}{!}{
@@ -406,20 +408,13 @@ Even when the number of trailer videos used is a subset of the original split, $
 \caption{Impact of MovieCLIP pretrained features vs Kinetics pretrained features for $M_{scene}$ (HVU) and $M_{trailer}$ (Moviescope). Results reported are mean average precision (\textbf{mAP}) values. $Model(Kin)$: Model with Kinetics400 pretrained features, where $Model \in \{M_{scene},M_{trailer}\}$ }
 \label{pretrain table}.
 \end{table}
-We consider the impact of MovieCLIP based pretraining by fixing the fully connected architectures $M_{scene}$, $M_{trailer}$ and varying the input features. In the without MovieCLIP ($Kin$) pretraining setting, we extract 1024 dim features from Swin-B model pretrained on Kinetics400 for HVU and Moviescope datasets. 
+We consider the impact of MovieCLIP-based pretraining by fixing the fully connected architectures $M_{scene}$, $M_{trailer}$ and varying the input features. In the without MovieCLIP ($Kin$) pretraining setting, we extract 1024 dim features from Swin-B model pretrained on Kinetics400 for HVU and Moviescope datasets. 
 From Table \ref{pretrain table}, we can see that the performance of $M_{scene}$ with MovieCLIP pretrained features is comparable to $M_{scene}(Kin)$, even when the domain of Kinetics400 \cite{kinetics400} is matched to HVU. Further, late fusion of prediction logits of $M_{scene}$ and  $M_{scene}(Kin)$ with equal weights improves the mAP to 57.73 for HVU, thus indicating the capture of complementary information when trained with movie data.
-
 We show some class-wise analysis in Fig \ref{scenegtbase} to showcase the classes where MovieCLIP pretrained features improve upon Kinetics400 pretrained features. From Fig \ref{scenegtbase}, we can see that for certain classes present in our taxonomy like \textit{tunnel}, \textit{restaurant}, \textit{apartment}, \textit{attic} and \textit{concert hall}, $M_{scene}$ performs better when compared to $M_{scene}(Kin)$. Similar trends can be seen for HVU scene classes that are part of broader scene classes in our taxonomy like \textit{riverbed} (part of \textit{river}), \textit{mountain pass} (part of \textit{mountain}) and \textit{track} (part of \textit{race track}).
 In case of Moviescope, $M_{trailer}$ 
 results in improved performance (\textbf{56.14}) as compared to $M_{trailer}(Kin)$ (\textbf{53.29}), due to domain similarity with MovieCLIP dataset. 
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.7\textwidth]{figures/scene_gt_base_model_updated_legend.png}
-    \caption{Sample scene classes in HVU where $M_{scene}$ performs better in comparison to $M_{scene}(Kin)$}. 
-    \label{scenegtbase}
-\end{figure}
 \section{Ethical implications}
-Visual scene recognition capabilities can help in uncovering biases associated with the portrayal of under-represented and marginalized characters in various settings. For example, women are portrayed more in indoor scenes like \textit{kitchen}, \textit{living room}, \textit{hospital} as compared to scenes like factory, laboratory or battlefield. Further, characters from marginalized demographic groups are often depicted in the background w.r.t common visual scenes, thus having considerable less share of speaking time. Apart from the portrayal of characters, the usage of large-scale pretrained models like CLIP \cite{CLIP} can help diagnose the inherent biases associated with its predictions since it is trained on free-form data curated from the web. The proposed scheme of utilizing CLIP for weakly tagging datasets can reduce the costs associated with large-scale human expert-driven annotation processes.
+Visual scene recognition capabilities can help in uncovering biases associated with the portrayal of under-represented and marginalized characters in various settings. For example, women are portrayed more in indoor scenes like \textit{kitchen}, \textit{living room}, \textit{hospital} as compared to scenes like factory, laboratory, or battlefield. Further, characters from marginalized demographic groups are often depicted in the background w.r.t common visual scenes, thus having considerably less share of speaking time. Apart from the portrayal of characters, the usage of large-scale pretrained models like CLIP \cite{CLIP} can help diagnose the inherent biases associated with its predictions since it is trained on free-form data curated from the web. The proposed scheme of utilizing CLIP for weakly tagging datasets can reduce the costs associated with large-scale human expert-driven annotation processes.
 \section{Takeaways}
 From the visual scene context recognition in media content guided by multimodal signal, we have the following major takeaways:
 \begin{itemize}
