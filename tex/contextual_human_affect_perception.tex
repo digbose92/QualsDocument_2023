@@ -1,4 +1,4 @@
-\chapter{Human affect understanding through multimodal context driven fusion}
+\chapter{Human affect understanding through context fusion}
 In the previous chapter, we explored how visual scene context information can be extracted from multimodal sources, especially media content, by utilizing large-scale pretrained external multimodal models. In this chapter, we will investigate the usage of contextual signals for instance-level multimodal content understanding. We consider instance-level multimodal content understanding along the granularity of individual persons and their perceived affective states in the scene. 
 \section{Human affect understanding}
  There has been increased interest in understanding the affective processes associated with various facets of human emotions \cite{dukes2021}. An integral part of affective understanding is the ability to infer expressions of human emotions from various sources like images \cite{AICA}, speech \cite{speechemo}, and language use \cite{Poria2019EmotionRI}, as seen in Fig \ref{}. Affect recognition systems have enabled multiple human-centered applications, notably in healthcare (depression detection \cite{depressiondetection}, autism-spectrum diagnosis \cite{autismguha}) and learning \cite{savchecnkoengagement}).
@@ -205,7 +205,7 @@ From Table \ref{MCFSAG}, we can see that in CAER-S, a fully finetuned Resnet34 m
     \label{qualfig}
 \end{figure}
 
-In Fig \ref{qualfig} (a) and (b), we can see that the inclusion of foreground context through captions like \textit{basketball team celebrating} and \textit{man crouching down with his hands on his face} results in consistent performance of MCF (MHA\textsubscript{enc}) as compared to $PO_{R34}$ (Resnet34 finetuned on person crops).  Similarly, for TV shows in Fig \ref{qualfig} (c) while the face crop based prediction from $FO_{R34}$ is \textbf{sad}, inclusion of foreground context with visual scene information gives a correct prediction for MCF (SAG-MHA\textsubscript{enc}). In Fig \ref{qualfig} (d), the act of \textit{gesturing with hand} enables MCF (SAG-MHA\textsubscript{enc}) to make a correct prediction (\textbf{Angry}) as compared to $FO_{R34}$ (Resnet34 finetuned on face crops).
+In Fig \ref{qualfig} (a) and (b), we can see that the inclusion of foreground context through captions like \textit{basketball team celebrating} and \textit{man crouching down with his hands on his face} results in consistent performance of MCF (MHA\textsubscript{enc}) as compared to $PO_{R34}$ (Resnet34 finetuned on person crops). Similarly, for TV shows in Fig \ref{qualfig} (c), while the face crop-based prediction from $FO_{R34}$ is \textbf{sad}, the inclusion of foreground context with visual scene information gives a correct prediction for MCF (SAG-MHA\textsubscript{enc}). In Fig \ref{qualfig} (d), the act of \textit{gesturing with hand} enables MCF (SAG-MHA\textsubscript{enc}) to make a correct prediction (\textbf{Angry}) as compared to $FO_{R34}$ (Resnet34 finetuned on face crops).
 
 \section{Limitations}
 
@@ -229,4 +229,14 @@ For image-based datasets like CAER-S, a lack of temporal information provides an
 
 \section{Conclusion}
 
+The major takeaways from the work are as follows:
 
+\begin{itemize}
+
+\item \textbf{Foreground context inclusion:} Foreground context in terms of activities/interactions with the environment can be captured through pretrained vision-language expert models.
+ 
+\item \textbf{Role of context fusion:} Attention mechanisms guided by visual scene and foreground contexts with person information improve human affect understanding.
+
+\item \textbf{Static viewpoint:} Images provide a static snapshot of the particular instant and do not consider the temporal context involved in the affective response.
+
+\end{itemize}
