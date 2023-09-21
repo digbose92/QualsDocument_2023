@@ -1,6 +1,6 @@
 \chapter{Advertisement video understanding through the lens of temporal context}
 
-In this chapter, we will explore the role of temporal context in macro-level content understanding of dynamic sources, i.e., videos. Specifically, we consider advertisement videos due to their unique narrative structures of multiple short-term temporal context changes that are linked by a longer narrative thread. In order to study the context-driven approaches, we introduce a new ads-specific benchmark called \textbf{MM-AU} with salient narrative-driven tasks for macro-level understanding i.e., topic categorization, tone transition, and social relevance. 
+In this chapter, we will explore the role of temporal context in macro-level content understanding of dynamic sources, i.e., videos. Specifically, we consider advertisement videos due to their unique narrative structures of multiple short-term temporal context changes that are linked by a longer narrative thread. In order to study the context-driven approaches, we introduce a new ads-specific benchmark called \textbf{\textit{MM-AU}} with salient narrative-driven tasks for macro-level understanding i.e., topic categorization, tone transition, and social relevance. 
 
 \section{Video Understanding}
 
@@ -39,25 +39,286 @@ Thus, the temporal context information needs to be processed both locally and gl
 \label{ads_structure_set}
 \end{figure}
 
-
-
-\subsection{Contextual signals as multi-modal streams:}
-    \subsubsection{Visual scene context}
-    \subsubsection{Auditory context}
-    Background music + audio events + speech (vocalizations)
-    \subsubsection{Language based context}
 \section{Advertisements as medium}
-\subsection{Challenges}
-Mention three cases:
+As a primary media source for disseminating information, advertisements (ads for short) have been utilized to promote products or convey messages about extant social or political issues. The utility of advertisements as a media source has been amplified by the wide variety of platforms like radio, television, newspaper print, video streaming, and social networking sites, presenting significant influences, whether direct or indirect, to viewers from diverse backgrounds \cite{Pardun}. As shown in Fig \ref{ads_structure_set}, The rising importance of advertisements in the current socio-economic scenario is evident from the expected increase in media ad spending from 225.79 in 2020 to 322.11 billion dollars in 2024.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/statistic_id272314_advertising-spending-in-the-us-2020-2024.png}
+\caption{Increase in demand for advertisements over last 4 years}
+\label{ads_structure_set}
+\end{figure}
+
+\section{Advertisements - Narrative driven tasks and challenges}
+
+Objectively understanding the rich content in ads and their impact on the viewer experience and behavior is hence of great interest. However, in enabling computational media understanding \cite{CMI}, advertisements present unique challenges in the form of condensed narrative structures \cite{Kim2017WhyNA}. Due to their relatively short duration when compared to feature-length movies, an advertisement video showcases a particular narrative structure in a tightly integrated sequence with different formats, including slice-of-life \cite{Mick1987TowardAS}, drama \cite{Leong1994UsingDT}, and transformational \cite{Puto1984InformationalAT}. Further, reasoning about the narrative structure requires a multi-scale understanding of the underlying topic and fine-grained elements, including the sequence of events  (of characters and interactions) and related messages. As shown in Fig~\ref{introfig}, the key elements associated with the narrative structure of ads and related challenges are listed as follows:
+
+\begin{figure}[h!]
+\centering 
+    \includegraphics[width=0.8\textwidth]{figures/Task_outline_1_Topic_TT_SM.pdf}
+  \caption{Schematic diagram showing illustrative examples of various tasks in the MM-AU (Multi-modal ads understanding) dataset. Multimodal understanding of ads along the lines of (a) Topic categorization (18 classes) (b) Tone transition (c) Social message detection i.e. Absence/Presence of social message}
+  \label{introfig}
+\end{figure}
+
+\textbf{\underline{Topic}}: understanding enables personalized categorization and retrieval for customers along with key insights into the representation of genders \cite{google-diversity} and different demographic groups with respect to target classes like healthcare, retail, travel, etc. Topic categorization involves the handling of both inter and intra-topic diversity between the videos in terms of human-object interactions and a wide variety of items/products, as shown in Fig~\ref{introfig} (a). 
+
+\textbf{\underline{Tone transition}}: Affective tone associated with an advertisement video refers to the perceived feeling by a viewer \cite{Veer2008HowTT}. Associating the appropriate tone with an ad enhances its persuasiveness, thus enabling the associated brand to expand its reach to a wide range of customers. While the positive tone centers around optimistic elements associated with hope and success \cite{Brooks2020ExploringAO}, portrayals of negative tone are tied to sad narratives involving fear and suffering. However, due to the narrative structure, the perceived affective tone exhibits transitions during the duration of an advertisement video, accompanied by changes in visuals and background music.  In Fig~\ref{introfig} (b), the video starts on a positive note with a happy person taking a picture, followed by a perceived negative tone in the middle due to the suffering of the person. The advertisement ends on a positive note, with the person being saved by an incoming vehicle.\\
+
+\textbf{\underline{Social message}}: Advertisements act as a major source of information about pressing social issues for consumers. Brands conveying messages about various social issues, including but not limited to gender inequalities, racial discrimination, and environmental conservation, are viewed favorably by consumers across different age groups \cite{Brooks2020ExploringAO}. In terms of advertisement videos, social message portrayal is characterized by a huge diversity in depiction, as shown in Fig~\ref{introfig} (c) due to underlying categories like smoking, accidents, gun violence etc.
+
+In this work, we introduce a multilingual multimodal benchmark called \textbf{\textit{MM-AU}} for the macro-level understanding of advertisement videos across the tasks of topic categorization, social message, and tone transition detection. Due to the inherent structure of the ads involving transitions in temporal context driven through multiple modalities, we propose context-guided attention mechanisms for the previously mentioned macro-level tasks. Our contributions can be listed as follows:
+
 \begin{itemize}
-\item Visual context changes sharply across shots but is tied together by an overall narrative (a diagram especially)
-\item The visual narrative doesn’t happen in isolation and is usually accompanied by a transition in musical tone (the contextual signal present in the background score/music sets the mood for the advertisement)
-\item The verbal cues provide descriptions of the foreground activities, including character interactions and narrations about the overall theme/topic (Language driven foreground context representations)
-\section{MM-AU dataset}
+    \item \textbf{\underline{Topic classification:}} We merge existing taxonomies for topic annotations from prior ads datasets and publicly available websites like {Ads of world}\footnote{https://www.adsoftheworld.com/} to obtain a condensed set of topic labels for the advertisement videos.
+    \item \textbf{\underline{Tone Transition detection:}} We introduce a novel benchmark task of tone transition detection in advertisement videos by obtaining crowdsourced feedback from human annotators.
+    \item \textbf{\underline{Social message detection:}} We provide weak human expert-based labels for detecting the presence/absence of social messages in advertisement videos.
+    \item \textbf{\underline{Language-based reasoning:}} We explore zero-shot baselines for the three benchmark tasks through applications of large-language models on ad transcripts.
+    \item \textbf{\underline{Context guided attention:}} We provide multiple context-guided attention baselines to benchmark the performance for the three macro-level tasks (topic classification, transition detection, and social message) and highlight future possibilities of explorations.
+\end{itemize}
+\section{Related work}
+
+\textbf{Narrative understanding:} 
+Narratives \cite{Fisher1987HumanCA} play an important role in enabling effective human communication and organizing the daily sequence of events. Advertisements centered on narratives \cite{Escalas1998ADVERTISINGNW} influence consumers by providing a concrete story arc centered around specific themes, protagonists, and their actions. Kim et al. \cite{Kim2017WhyNA} introduced an integrated theory of understanding narratives in advertisements based on key variables like emotic response, ad hedonic value, ad credibility, and perceived goal facilitation. Lien et al. \cite{Lien2013NarrativeAT} explored narrative ads from the lens of persuasion and the relationship with different advertisement mediums - verbal or visual. In the realm of computational narrative understanding, prior works have focused on language-based approaches for marking high-level structures in short stories \cite{Li2017AnnotatingHS}, most reportable events (MRE) in Reddit comment threads \cite{Ouyang2015ModelingRE} and primary processes in movie scripts, newspaper articles, etc \cite{Boyd2020TheNA}.\\
+\textbf{Affect modeling in videos:}
+Advertisement brands tend to invoke emotional reactions \cite{Holbrook1984TheRO} in viewers by influencing their actions i.e., purchasing a particular product. In the domain of television commercials, a combination of physiological, symbolic, and self-report measures was explored in \cite{Micu2010MeasurableEH} to determine the emotional responses of viewers. The role of facial expressions in decoding the preferences of viewers, including purchase intent, and smile responses, has been explored through large-scale studies in \cite{McDuff2014PredictingAL}, \cite{Teixeira2014WhyWA}. Apart from facial expressions, the role of CNN-based audio-visual and EEG descriptors from the viewers has been explored in a multi-task setup \cite{Shukla2017AffectRI,Shukla2017EvaluatingCV,Shukla2019RecognitionOA} for arousal and valence prediction in advertisement videos. Existing video-based affect datasets like DEAP \cite{Koelstra2012DEAPAD}, VideoEmotion \cite{Jiang2014PredictingEI} also focused on single arousal, valence, and dominance ratings as well as discrete emotion labels for music and user-generated videos, respectively.\\
+In the domain of continuous affect modeling, datasets with frame-level annotations have been introduced across a wide variety of domains, including naturalistic and induced clips (HUMAINE \cite{DouglasCowie2007TheHD}), movies (COGNIMUSE \cite{Zlatintsi2017COGNIMUSEAM}, LIRIS-ACCEDE \cite{Baveye2015LIRISACCEDEAV}) and online videos (EEV \cite{Sun2020EEVDP}). Further extensions of continuous affect modeling based on independent and self-reports have been explored for daily emotional narratives in SENDv1 dataset \cite{Ong2019ModelingEI}. For advertisements, climax annotations (presence + rough timestamps) were provided by human annotators on a subset of the Video Ads dataset \cite{Hussain2017AutomaticUO} in \cite{Ye2018StoryUI} along with climax-driven modeling strategies to predict sentiment labels at the video level. 
+In our proposed benchmark \textbf{\textit{MM-AU}}, based on the standard definition in \cite{Brooks2020ExploringAO}, we ask human annotators to denote the perceived tone in the advertisement video across segments approximately marking the start, middle, and end. The perceived tone transition enables tracking of the narrative dynamics in advertisement videos by considering the interactions between various contextual streams through different modalities i.e. audio, visual, and narrations/spoken interactions (through transcripts).\\
+\textbf{Advertisement benchmarks:} 
+\begin{table*}[h!]
+\centering
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+\textbf{Dataset}       & \textbf{Annotation type} & \textbf{Duration} & \textbf{\#Samples} & \textbf{\#Shot} & \textbf{\#Class}                     & \textbf{Modalities}      & \textbf{Languages}                   & \textbf{Tasks}                      \\ \hline
+Video Ads Dataset (I)  & H                        & NA                & 64832              & NA              & 38 (T), 30 (S), AR (OE), H(2), Ex(2) & Images                   & English                              & Image level classification          \\ \hline
+Video Ads Dataset (V)  & H                        & 144.87            & 3477               & NA              & 38 (T), 30 (S), AR (OE), H(2), Ex(2) & Video                    & English                              & Video level classification          \\ \hline
+Tencent-AVS            & H                        & 142.1h            & 12k                & 121.1k          & 25 (Pr), 34 (St), 23 (Pl)            & Video/Audio/ASR/OCR              & Chinese and English                  & Scene level classification          \\ \hline
+Ads-persuasion dataset & H + AL                   & NA                & 3000               & NA              & 21 (PS)                              & Images                   & English                              & Image level classification          \\ \hline
+E-MMAD                 & SG descriptions          & 1021.6 h          & 120984             & NA              & 4863 (PC)                            & Video                    & Chinese and English                  & Video level captioning              \\ \hline
+\textbf{MM-AU}         & \textbf{H + SA}          & \textbf{147.8h}   & \textbf{8399}      & \textbf{216.4k} & \textbf{18 (T), 3 (Tone), 2 (SM)}    & \textbf{Video/Audio/ASR} & \textbf{Multilingual (65 languages)} & \textbf{Video level classification} \\ \hline
+\end{tabular}
+}
+\vspace{5mm}
+\caption{Comparison of \textbf{\textit{MM-AU}} with other available advertisement benchmarks across different modalities.  \underline{Annotation type:} \textbf{H}: Human annotation, \textbf{AL}: Active Learning, \textbf{SA}: Semi-automatic, \textbf{SG}: Store generated. \underline{Duration:} \textbf{NA}: Not applicable for images; Mentioned in hours(h). \underline{\#Samples:} Number of video clips or images. \underline{\#Shot:} \textbf{NA}: Not applicable for images; Number of shots detected from all the video samples. \underline{\#Class:} \textbf{T:} Topic, \textbf{S:} Sentiment, \textbf{OE:} Open-Ended, \textbf{H:} Humor, \textbf{Ex:} Exciting, \textbf{Pr:} Presentation, \textbf{St:} Style, \textbf{Pl:} Place, \textbf{PS:} Persuasion strategy, \textbf{PC:} Product categories, \textbf{SM:} Social messages}
+\label{Overview}
+\end{table*}
+
+While there has been progress in terms of movie understanding due to the introduction of large-scale multimodal benchmark datasets like Condensed Movies \cite{bain2020condensed}, MovieNet \cite{huang2020movienet}, MAD \cite{Soldan_2022_CVPR}, Movie-cuts \cite{Pardo2021MovieCutsAN}, MovieCLIP \cite{Bose_2023_WACV} and SAM-S \cite{Hebbar2023ADF}, only few benchmarks have focused on large-scale understanding of advertisements across broad and fine-grained content. Hussain et al. \cite{Hussain2017AutomaticUO} introduced the benchmark Video-Ads dataset to facilitate understanding of images and videos along the lines of broad topics, induced sentiments, and action/intent reasoning. The images in the Video-Ads dataset were utilized in \cite{Singla2022PersuasionSI} for computational modeling of persuasion across 21 categories in marketing domain. Regarding large-scale ads understanding, Tencent-AVS dataset \cite{Jiang2022TencentAA} was proposed to enable multi-modal scene level categorization into semantic classes like presentation, places and styles. While the previously mentioned datasets focused on classification tasks, E-MMAD \cite{Zhang2022AttractMT} introduced the task of informative caption generation from advertisements across 120k e-commerce videos.
+\\
+\textbf{\textit{MM-AU}}, our curated multilingual dataset utilizes publicly available videos from Ads of the World along with a subset from Video-Ads dataset and an in-house video catalog from Cannes Lion archive \cite{cannes-lions}. We provide 18 broad topic categories by combining existing taxonomies (Cannes Lion, Ads of World, and Video-Ads dataset). Further, we rely on human expert annotators to label transitions in perceived tone along with the absence/presence of social messages in 8.4K advertisement videos. A comparative overview of \textbf{\textit{MM-AU}} and other advertisement datasets is shown in Table \ref{Overview}.\\
+\textbf{Semantic video understanding:}
+Existing large-scale video datasets including Kinetics\cite{Carreira2017QuoVA}, Moments-in-time \cite{Monfort2018MomentsIT}, ActivityNet \cite{Heilbron2015ActivityNetAL}, AVA \cite{Gu2017AVAAV} have focused mainly on classifying entity driven actions from in-the-wild short videos. Higher-level semantic labels beyond actions like topics, concepts, events, and video types were exploited for large-scale video-level categorization in datasets like Youtube-8M \cite{AbuElHaija2016YouTube8MAL}, Holistic-visual understanding (HVU) \cite{diba2020large} and 3MASSIV \cite{Gupta20223MASSIVMM}. Our proposed benchmark \textbf{\textit{MM-AU}} explores the domain of semantic video understanding in ads by considering broad categories like topic, presence/absence of social message, and fine-grained affective labels of perceived tone transition.\\
+\textbf{Multimodal representation learning:} Multimodal representation learning \cite{Liang2022FoundationsAR} centers around the fusion of information from different modalities at multiple scales, including early, late, and mid-fusion. Prior works related to ads have utilized multimodal-LSTMs \cite{Vedula2017MultimodalCA}, segment-level autoencoders \cite{SomandepJointenc} or joint cross-modal embedding \cite{Ye2019InterpretingTR} approaches for learning multimodal representations for a variety of tasks. With the advent of transformer \cite{transformers} based multimodal models like PerceiverIO \cite{Jaegle2021PerceiverIA}, attention bottlenecks\cite{nagrani2021attention}, and VATT \cite{Akbari2021VATTTF}, information fusion at the input token space, followed by joint encoders, have become more prevalent. A multi-task attention-based approach was explored in \cite{LookReadFeel} for jointly predicting topic and sentiment labels associated with advertisement images. A NextVLAD \cite{Lin2018NeXtVLADAE} based approach \cite{Weng2021AMF} combined with global-local attention was utilized for predicting scene-specific labels in the Tencent \cite{Jiang2022TencentAA} ads benchmark dataset.
+\section{MM-AU benchmark}
 \subsection{Data sources}
+We consider multiple ads-specific sources for curating our proposed MM-AU dataset. As a primary source, we consider Ads-of-the-world (AOW)\footnote{https://www.adsoftheworld.com/} video hosting website since it contains a richly-curated catalog of ads in various formats like film, print, digital, and video spanning across multiple countries. As auxiliary sources, we consider additional videos from the Cannes Lion Film Festival archive and Video-Ads dataset \cite{Hussain2017AutomaticUO}. We filter the videos based on unique video ids associated with their public links to ensure no duplicates across three sources. The share of different sources in curating the combined list of 8399 advertisement videos is shown in Fig~\ref{ads_sources}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/data_sources_distribution.pdf}
+    \caption{Share of different ad sources in MM-AU dataset. Ads of the world (6304 videos), Cannes Lion (1135), Video-Ads dataset (960) }
+    \label{ads_sources}
+\end{figure}
+
 \subsection{Human expert-driven annotations}
-\subsection{Dataset statistics}
-\section{Multimodal representative tasks}
+We employ a semi-automatic process for tagging the advertisement videos with broad topic categories. For the detection tasks of tone transition and social message, we use Amazon Mechanical Turk \footnote{https://www.mturk.com/} to obtain responses from a pool of 36 human annotators. 
+For selecting a pool of workers with the requisite expertise, we hosted an initial pilot study where the workers are instructed to mark the tone transition labels and presence/absence of social message in the given set of videos. Further, in the final annotation phase, three annotators independently annotate each sample for the tone-transition and social message detection tasks. 
+The annotation process details associated with the respective tasks are listed below:\\
+\textbf{\underline{Tone transition:}} The annotators are instructed to mark the perceived tone labels associated with the start, middle, and ending segments of the advertisement videos. To reduce the burden associated with the task, no instructions are provided to mark the timestamps associated with the respective segments. 
+\begin{figure*}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{figures/Annotation_Flow_Part_2_updated.pdf}
+    \caption{Outline of the annotation framework for tone transition and social message detection problem}
+    \label{annot_framework}
+\end{figure*}
+Based on the tone definition considered in \cite{Brooks2020ExploringAO}, we provide the following descriptions to aid the annotation process:
+\begin{itemize}
+    \item \textbf{Positive tone:} An advertisement video segment has a positive tone if it contains: \textit{optimistic elements portraying hope and success} or \textit{positive imagery based on uplifting music and visuals}. Examples include girls overcoming negative stereotypes and succeeding in sports or a blind person being able to navigate easily through city roads by using an app.
+    \item \textbf{Negative tone:} An advertisement video segment has a negative tone if it contains: \textit{sad narrative showing suffering, fear, destruction} or \textit{depressing music and distressing visuals}. Salient themes associated with negative tone include domestic violence, environmental damage, human trafficking, crisis from wars etc.
+\end{itemize}
+If a segment does not contain the above-mentioned characteristics, the annotators are instructed to mark the perceived tone as neutral. To determine the reasoning involved in marking the tone labels associated with the segments, the annotators are also asked to provide explanations regarding their choices. In Fig \ref{annot_framework}, we show the outline of the framework provided to the annotators for marking the tone associated with the start, middle, and end segments and the absence/presence of a social message. We provide a sample example to the annotators regarding tone transition and associated explanations, as shown in Fig \ref{tone_transition}. As seen in Fig \ref{tone_transition}, the beginning (start) segment has a perceived \textcolor{red}{\textbf{negative}} tone because police activity is being shown. The middle segment also shows a \textcolor{red}{\textbf{negative}} tone because vehicles are being destroyed, followed by a \textcolor{blue}{\textbf{positive}} tone at the ending portion because the kids are playing with toys.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.5\columnwidth]{figures/Annotation_examples_tone_transition_new.pdf}
+    \caption{Example provided to the annotators showing the tone transition and associated explanations}
+    \label{tone_transition}
+\end{figure}
+\\
+\textbf{\underline{Social message detection:}} For social message detection, the annotators are instructed to check for the absence/presence of social messages in the given video. Based on the social message framing in ads \cite{Brooks2020ExploringAO}, we provide the following definition to guide the annotation process:
+\begin{itemize}
+    \item An advertisement video has a social message if it provides awareness about any social issue. Examples include \textit{gender equality}, \textit{drug abuse}, \textit{police brutality}, \textit{workplace harassment}, \textit{domestic violence}, \textit{child labor}, \textit{homelessness}, \textit{hate crimes} etc.
+\end{itemize}
+To simplify the annotation process, we ask the annotators to mark Yes/No for indicating the presence/absence of social messages in the videos instead of marking the exact categories in the curated list of social issues \cite{ciment2006social}. The outline of the framework provided to annotators for marking the presence/absence of social messages is shown in Fig \ref{annot_framework}.
+Further, annotators are also provided with example videos showing different forms of social messages. In Fig \ref{social_message} (a), frame transitions are shown from an example video urging everyone to vote since voters having bias can cast votes in their absence. In Fig  \ref{social_message} (b), sample frames in the sequence are shown from another example video highlighting the importance of equal opportunities for everyone in sports.
+\begin{figure*}[h!]
+\centering
+    \includegraphics[width=0.8\textwidth]{figures/new_social_message_image.pdf}
+    \caption{Example videos associated with absence/presence of social message provided to the annotators. (a) Frame transition associated with an example video urging people to vote (b) Frame transition associated with an example video emphasizing equal opportunities for everyone in sports.}
+    \label{social_message}
+\end{figure*}
+\\
+\textbf{\underline{Topic categorization:}}
+We annotate topic categories using the existing taxonomies from Ads-of-the-world (AOW), Cannes Lions Film Festival \cite{cannes-lions}, and Video-Ads \cite{Hussain2017AutomaticUO} datasets. We denote the taxonomies associated with Cannes Lions Film Festival and Video-Ads datasets as Cannes-coding [\textcolor{purple}{\textbf{CC}}] and Video-Ads [\textcolor{blue}{\textbf{VA}}] coding schemes. 
+We extract the available tags associated with 6304 videos in Ads-of-the-world [\textcolor{red}{\textbf{AOW}}] and retain the top 40 tags based on frequency. Then we manually merge the filtered topic tags from AOW with similar labels in Cannes-coding  [\textcolor{purple}{\textbf{CC}}] and Video-Ads [\textcolor{blue}{\textbf{VA}}] coding schemes. Some examples of merged labels from different sources are listed as follows with the final parent topic category:
+\begin{itemize}
+    \item \textbf{Publications media:} Media \& Publications  [\textcolor{purple}{\textbf{CC}}]; Media and arts [\textcolor{blue}{\textbf{VA}}]; TV Promos, Music, Media, Movies [\textcolor{red}{\textbf{AOW}}]
+    \item \textbf{Games:} Games and toys [\textcolor{blue}{\textbf{VA}}]; Gaming [\textcolor{red}{\textbf{AOW}}]
+    \item \textbf{Sports:} Sports equipment and activities [\textcolor{blue}{\textbf{VA}}]; Sports [\textcolor{red}{\textbf{AOW}}]
+    \item \textbf{Clothing:} Clothing, Footwear \& Accessories [\textcolor{purple}{\textbf{CC}}]; Clothing and accessories [\textcolor{blue}{\textbf{VA}}]; Personal Accessories [\textcolor{red}{\textbf{AOW}}]
+\end{itemize}
+A detailed list of mapping between the AOW, CC and VA coding schemes is included as part of the Appendix (\ref{app:topic_categories}). Our final merged topic taxonomy consists of 18 categories as follows:
+\begin{itemize}
+    \item \textit{Games, Household, Services, Misc, Sports, Banking, Clothing, Industrial and agriculture, Leisure, Publications media, Health, Car, Electronics, Cosmetics, Food and Drink, Awareness, Travel and transport, Retail}
+\end{itemize}
+\textbf{\underline{Dataset Filtering:}} During the annotation process, we employ certain checks to maintain the quality of the annotated data. We reject those tone transition annotations with very short explanations (single words) or long generic descriptions of ads copied from the internet. Further, we also flag tone-transition annotations with the copied content across the start, middle, and end segments. For topic categorization, we merge categories with low frequencies, i.e., Alcohol and Restaurant, into the broad category of Food and Drink.
+\subsection{Statistics}
+MM-AU consists of 8399 annotated videos with a total of 147 hours of curated data. A detailed overview of MM-AU with total duration, number of tags, and year coverage is shown in Table \ref{Data_stats_table}.
+\begin{table}[h!]
+\centering
+\begin{tabular}{@{}cc@{}}
+\toprule
+\textbf{Attribute} & \textbf{Value} \\ \midrule
+\textbf{\#videos}           & 8399           \\
+\textbf{\#explanations}     & 74970         \\
+\textbf{\#topics}           & 18          \\
+\textbf{\#social msg labels}       & 25197          \\
+\textbf{\#tone labels}           & 75,591         \\
+\textbf{\#duration}         & 147.79 hrs     \\
+\textbf{\#avg duration}     & 63.35s         \\
+\textbf{year}               & 2006-2019      \\
+\textbf{\#annotators}       & 36             \\ 
+\textbf{\#countries}       & 99             \\ \bottomrule
+\end{tabular}
+\caption{Data statistics of MM-AU dataset. \#social msg labels: total number of labels }
+\label{Data_stats_table}
+\end{table}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\columnwidth]{figures/social_message_majority.pdf}
+    \caption{Distribution of the social message absence (No) and presence (Yes) labels in MM-AU}
+    \label{Social_message_majority}
+\end{figure}
+\begin{figure*}[h!]
+  \centering
+  \includegraphics[width=\textwidth]{figures/topic_listing_new_pdf.pdf}
+  \caption{Distribution of topics in MM-AU dataset}
+  \label{topics}
+\end{figure*}
+The distribution of topics is shown in Fig~\ref{topics}, with Food and Drink, Awareness, and Electronics being the top-3 dominant categories. In the case of perceived tone labels, we obtain a high majority agreement among annotators in marking the start (\textbf{91.2\%}), middle (\textbf{91.6\%}), and the ending (\textbf{94.5\%}) segments of the videos with perceived tone labels. Since annotating the presence/absence of social messages is a comparatively less subjective task than perceived tone labeling, we obtain a majority agreement (\textbf{99\%}) among the annotators. In terms of tone labels for start, middle, and end segments, we can see from Fig~\ref{start_mid_end_tone}, that the dominant perceived tone for the advertisements is positive, with its share rising from \textbf{60.2\%} (start) to \textbf{81.3\%} (end). This can be explained due to the fact that advertisements are primarily designed to persuade viewers to buy certain products or act toward certain social issues. However, from Fig~\ref{start_mid_end_tone}, we can see that the share of negative tone labels increases from \textbf{15.5\%} to \textbf{19.6\%} due to the narrative structure of the ads, where the middle segment portrays negative elements like human suffering, environmental damage, etc to set up the final conclusion. From Fig~\ref{Social_message_majority}, we can see that \textbf{9.0\%} of the videos, i.e. 759 contain social messages, as marked by \textbf{Yes} label. Out of 759 videos, \textbf{62.5\%} exhibit transition in perceived tone with the share of negative tone rising from \textbf{32.3\%} to \textbf{43.3\%} in the middle segments.
+
+% \begin{figure}[h!]
+% \centering
+% \subfloat[]{%
+% \includegraphics[width=0.33\textwidth]{figures/start_tone_majority.pdf}% 
+% \label{start_tone}
+% }
+% \subfloat[]{%
+% \includegraphics[width=0.33\textwidth]{figures/middle_tone_majority.pdf}%
+% \label{mid_tone}
+% }
+% \subfloat[]{%
+% \includegraphics[width=0.34\textwidth]{figures/end_tone_majority.pdf}%
+% \label{mid_tone}
+% }
+% \caption{Distribution of majority perceived tone labels (among 3 annotators) across (a) start, (b) middle, and (c) ending segments in MM-AU dataset (8399 videos) }
+% \label{start_mid_end_tone}
+% \end{figure}
+\begin{figure}
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.8\linewidth]{figures/start_tone_majority.pdf}
+  \caption{Start segment}
+  \label{start_tone}
+\end{subfigure}%
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.8\linewidth]{figures/middle_tone_majority.pdf}
+  \caption{Middle segment}
+  \label{mid_tone}
+\end{subfigure}
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.8\linewidth]{figures/end_tone_majority.pdf}
+  \caption{End segment}
+  \label{end_tone}
+\end{subfigure}
+\caption{Distribution of majority perceived tone labels (among 3 annotators) across (a) start, (b) middle, and (c) ending segments in MM-AU dataset (8399 videos) }
+\label{start_mid_end_tone}
+\end{figure}
+
+\begin{figure}
+\begin{subfigure}{.50\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{figures/topic_vs_social_message.pdf}
+  \caption{Distribution of Topics wrt social message}
+  \label{topic_social_message}
+\end{subfigure}%
+\begin{subfigure}{.50\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{figures/transition_vs_social_message.pdf}
+  \caption{Distribution of Tone transition wrt social message}
+  \label{tone_transition_social_message}
+\end{subfigure}
+\caption{Distribution of topics and perceived tone transition across videos having the presence of social message (739 videos) in MM-AU dataset}
+\label{topic_tone_transition_social_message}
+\end{figure}
+We further explore the intersection between the presence of social message and associated topics and tone transition (including tone labels for different segments of the video). From Fig \ref{topic_tone_transition_social_message} (a), we can see that out of 739 videos having social messages, \textbf{77.9\%} have \textbf{Awareness} as the associated topic label. The \textbf{Awareness} topic label includes subcategories related to social issues involving environmental damage, animal rights, smoking, alcohol abuse, domestic violence, refugee crisis, cyberbullying, etc. Further, as shown in Fig \ref{topic_tone_transition_social_message} (b), we observe a greater incidence of transitions in perceived tone (\textbf{62.5\%}) associated with videos having social messages. A detailed breakdown of segment-wise perceived tone labels for videos having social messages is shown in Fig \ref{start_mid_end_soc_msg_tone}. We can see an increase in the perceived negative tone from \textbf{32.3\%} to \textbf{43.3\%}. This can be attributed to the narrative structure of the advertisement videos having the presence of a social message where the middle segment primarily portrays negative elements i.e. environmental damage, human suffering etc to set up the conclusion.
+\begin{figure}
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{figures/start_tone_vs_social_message.pdf}
+  \caption{Start segment}
+  \label{start_tone_social_message}
+\end{subfigure}%
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{figures/middle_tone_vs_social_message.pdf}
+  \caption{Middle segment}
+  \label{mid_tone_social_message}
+\end{subfigure}
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{figures/ending_tone_vs_social_message.pdf}
+  \caption{End segment}
+  \label{end_tone_social_message}
+\end{subfigure}
+\caption{Distribution of perceived tone labels across the (a) start, (b) middle, and (c) ending segments in MM-AU dataset for videos having social message (739 videos) }
+\label{start_mid_end_soc_msg_tone}
+\end{figure}
+
+
+
+\section{Task definition}
+\textbf{\underline{Social message detection:}}
+Based on the social message annotations (majority), the presence/absence of social message (SM) for $ith$ video is defined as:
+\begin{equation}
+  SM_{i} =
+    \begin{cases}
+      0 & \text{No (Absence of SM)}\\
+      1 & \text{Yes (Presence of SM)}
+    \end{cases}       
+\end{equation}
+Our aim is to learn a network $f_{SM}$ to predict social message presence/absence $\hat{SM}_{i}$ for the $ith$ video. The above definition results in 759 and 7640 videos marked with the presence  (1) and absence (0) of social messages, respectively.\\
+\textbf{\underline{Tone transition:}}
+Based on the start, middle, and end perceived tone labels (majority), we define the transition for $ith$ video as follows:
+\begin{equation}
+  Tr_{i} =
+    \begin{cases}
+      0 & \text{$Start_{i}=Mid_{i}=End_{i}$}\\
+      1 & \text{else}
+    \end{cases}       
+\end{equation}
+Our aim is to learn a multimodal network $f_{Tr}$ to predict binary tone transition $\hat{Tr}_{i}$ for the $ith$ video.
+MM-AU dataset has 3854 and 4545 videos marked with Transition (1) and No Transition (0), respectively.\\
+\textbf{\underline{Topic categorization:}}
+For topic categorization, we aim to learn a multimodal network $f_{Topic}$ to predict $\hat{Topic}_{i}$ for the $ith$ video out of 18 target categories. 
+\section{Context through multimodality}
+In the case of advertisements, we utilize the available information with temporal and foreground contexts for macro-level understanding based on the previously mentioned tasks of topic categorization, social message detection, and tone transition. The context information can be processed through the modalities as mentioned below:
+\begin{itemize}
+    \item \textbf{Visual modality:} Shots with different camera viewpoints and semantic divisions.
+    \item \textbf{Audio modality:} Background music and audio events.
+    \item \textbf{Language modality:} Narrations/descriptions through text transcripts.
+\end{itemize}
+\section{Experiments}
 \subsection{Topic categorization}
 \subsection{Tone transition}
 \subsection{Absence/Presence of socially relevant cues}
@@ -67,7 +328,7 @@ Mention three cases:
 \subsection{Unimodal vs Multimodal baselines}
 \section{Limitations}
 \section{Conclusions}
-\end{itemize}
+
 
 
 
