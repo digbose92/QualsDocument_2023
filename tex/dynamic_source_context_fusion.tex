@@ -51,7 +51,7 @@ As a primary media source for disseminating information, advertisements (ads for
 
 \section{Advertisements - Narrative driven tasks and challenges}
 
-Objectively understanding the rich content in ads and their impact on the viewer experience and behavior is hence of great interest. However, in enabling computational media understanding \cite{CMI}, advertisements present unique challenges in the form of condensed narrative structures \cite{Kim2017WhyNA}. Due to their relatively short duration when compared to feature-length movies, an advertisement video showcases a particular narrative structure in a tightly integrated sequence with different formats, including slice-of-life \cite{Mick1987TowardAS}, drama \cite{Leong1994UsingDT}, and transformational \cite{Puto1984InformationalAT}. Further, reasoning about the narrative structure requires a multi-scale understanding of the underlying topic and fine-grained elements, including the sequence of events  (of characters and interactions) and related messages. As shown in Fig~\ref{introfig}, the key elements associated with the narrative structure of ads and related challenges are listed as follows:
+Objectively understanding the rich content in ads and their impact on the viewer experience and behavior is hence of great interest. However, in enabling computational media understanding \cite{CMI}, advertisements present unique challenges in the form of condensed narrative structures \cite{Kim2017WhyNA}. Due to their relatively short duration when compared to feature-length movies, an advertisement video showcases a particular narrative structure in a tightly integrated sequence with different formats, including slice-of-life \cite{Mick1987TowardAS}, drama \cite{Leong1994UsingDT}, and transformational \cite{Puto1984InformationalAT}. Further, reasoning about the narrative structure requires a multi-scale understanding of the underlying topic and fine-grained elements, including the sequence of events (of characters and interactions) and related messages. As shown in Fig~\ref{introfig}, the key elements associated with the narrative structure of ads and related challenges are listed as follows:
 
 \begin{figure}[h!]
 \centering 
@@ -82,7 +82,7 @@ Narratives \cite{Fisher1987HumanCA} play an important role in enabling effective
 \textbf{Affect modeling in videos:}
 Advertisement brands tend to invoke emotional reactions \cite{Holbrook1984TheRO} in viewers by influencing their actions i.e., purchasing a particular product. In the domain of television commercials, a combination of physiological, symbolic, and self-report measures was explored in \cite{Micu2010MeasurableEH} to determine the emotional responses of viewers. The role of facial expressions in decoding the preferences of viewers, including purchase intent, and smile responses, has been explored through large-scale studies in \cite{McDuff2014PredictingAL}, \cite{Teixeira2014WhyWA}. Apart from facial expressions, the role of CNN-based audio-visual and EEG descriptors from the viewers has been explored in a multi-task setup \cite{Shukla2017AffectRI,Shukla2017EvaluatingCV,Shukla2019RecognitionOA} for arousal and valence prediction in advertisement videos. Existing video-based affect datasets like DEAP \cite{Koelstra2012DEAPAD}, VideoEmotion \cite{Jiang2014PredictingEI} also focused on single arousal, valence, and dominance ratings as well as discrete emotion labels for music and user-generated videos, respectively.\\
 In the domain of continuous affect modeling, datasets with frame-level annotations have been introduced across a wide variety of domains, including naturalistic and induced clips (HUMAINE \cite{DouglasCowie2007TheHD}), movies (COGNIMUSE \cite{Zlatintsi2017COGNIMUSEAM}, LIRIS-ACCEDE \cite{Baveye2015LIRISACCEDEAV}) and online videos (EEV \cite{Sun2020EEVDP}). Further extensions of continuous affect modeling based on independent and self-reports have been explored for daily emotional narratives in SENDv1 dataset \cite{Ong2019ModelingEI}. For advertisements, climax annotations (presence + rough timestamps) were provided by human annotators on a subset of the Video Ads dataset \cite{Hussain2017AutomaticUO} in \cite{Ye2018StoryUI} along with climax-driven modeling strategies to predict sentiment labels at the video level. 
-In our proposed benchmark \textbf{\textit{MM-AU}}, based on the standard definition in \cite{Brooks2020ExploringAO}, we ask human annotators to denote the perceived tone in the advertisement video across segments approximately marking the start, middle, and end. The perceived tone transition enables tracking of the narrative dynamics in advertisement videos by considering the interactions between various contextual streams through different modalities i.e. audio, visual, and narrations/spoken interactions (through transcripts).\\
+In our proposed benchmark \textbf{\textit{MM-AU}}, based on the standard definition in \cite{Brooks2020ExploringAO}, we ask human annotators to denote the perceived tone in the advertisement video across segments approximately marking the start, middle, and end. The perceived tone transition enables tracking of the narrative dynamics in advertisement videos by considering the interactions between various contextual streams through different modalities, i.e. audio, visual, and narrations/spoken interactions (through transcripts).\\
 \textbf{Advertisement benchmarks:} 
 \begin{table*}[h!]
 \centering
@@ -312,20 +312,174 @@ MM-AU dataset has 3854 and 4545 videos marked with Transition (1) and No Transit
 \textbf{\underline{Topic categorization:}}
 For topic categorization, we aim to learn a multimodal network $f_{Topic}$ to predict $\hat{Topic}_{i}$ for the $ith$ video out of 18 target categories. 
 \section{Context through multimodality}
-In the case of advertisements, we utilize the available information with temporal and foreground contexts for macro-level understanding based on the previously mentioned tasks of topic categorization, social message detection, and tone transition. The context information can be processed through the modalities as mentioned below:
+In the case of advertisements, we utilize the available information with temporal and foreground contexts for macro-level understanding based on the previously mentioned tasks of topic categorization, social message detection, and tone transition. The context information can be processed through the modalities mentioned below:
 \begin{itemize}
-    \item \textbf{Visual modality:} Shots with different camera viewpoints and semantic divisions.
-    \item \textbf{Audio modality:} Background music and audio events.
-    \item \textbf{Language modality:} Narrations/descriptions through text transcripts.
+    \item \textbf{Temporal context:} Visual modality (shots with different camera viewpoints and semantic divisions), Audio modality 
+      (Background music and audio events).
+    \item \textbf{Foreground context:} Language modality (Narrations/descriptions through text transcripts).
 \end{itemize}
+
+\section{Multimodal context fusion}
+\begin{figure}[h!]
+     \centering
+     \includegraphics[width=\textwidth]{figures/ads_modeling_structure.png}
+    \caption{Proposed architecture for the fusion of different modalities associated with temporal and foreground contexts. }
+\end{figure}
+For the input modalities $a$, $v$, $t$, we outline the separate context-guided fusion operations as follows:
+\subsection{Foreground and temporal context fusion}
+We outline the operations for foreground (\textbf{language}) and temporal (\textbf{visual}) context fusion as follows:
+ \begin{align}
+    \begin{split}
+     e_{text}&=Text_{proj}(f_{text}(t))\\
+     e_{vis}&=Vis_{proj}(f_{visual}(v)) \\ 
+     TV_{logits}&=\mathbf{AvgPool}(\mathbf{{Tx}_{TV}}([e_{text};e_{vis}])) \\
+    \end{split}
+ \end{align}
+ Here, $\mathbf{{Tx}_{TV}}$ is the text-visual fusion block used for combining foreground (\textbf{text}) and temporal (\textbf{visual}) contexts. $f_{visual}$ and $f_{text}$ refer to the pretrained visual and text encoders. The linear projection layers for visual and text modalities are denoted by $Vis_{proj}$ and $Text_{proj}$. 
+
+\subsection{Temporal context fusion}
+For the temporal context fusion block we have the following sequence of operations:
+\begin{align}
+    \begin{split}
+     e_{aud}&=Aud_{proj}(f_{aud}(a))\\
+     e_{vis}&=Vis_{proj}(f_{visual}(v)) \\ 
+     AV_{logits}&=\mathbf{AvgPool}(\mathbf{{Tx}_{AV}}([e_{aud};e_{vis}])) \\
+    \end{split}
+\end{align}
+ Here, $\mathbf{{Tx}_{AV}}$ is the audio-visual fusion block used for combining temporal context information from (\textbf{audio}) and   (\textbf{visual}) modalities. $f_{visual}$ and $f_{aud}$ refer to the pretrained visual and audio encoders. The linear projection layers for visual and audio modalities are denoted by $Vis_{proj}$ and $Aud_{proj}$. 
+
+ For the fusion blocks, we consider the PerceiverIO transformer architecture \cite{Jaegle2021PerceiverIA} due to the following reasons:
+
+ \begin{itemize}
+    \item \textbf{Reduction in operational complexity:} In the case of PerceiverIO, the input embedding matrix having a significantly large sequence length is mapped to a limited group of latent vectors followed by attention operation on the latent vectors. This decreases the operational complexity of the attention operation. In Fig \ref{Perceiver}, $N$ is smaller than input sequence length $M$.
+    \item \textbf{Generalization to a wide variety of inputs:} PerceiverIO architecture has been shown to be highly generalizable to a wide variety of inputs, including video, audio, and point clouds.
+ \end{itemize}
+
+In our proposed approach, we train the fusion blocks $\mathbf{{Tx}_{AV}}$ and $\mathbf{{Tx}_{TV}}$ separately due to overfitting issues faced while using a single fusion block for three modalities. Further, the combinations of different modalities (\textbf{audio-visual}) and (\textbf{text-visual}) contain complementary information that further improves macro-level understanding across the tasks in MM-AU benchmark. In order to capture the complementary information, we perform logit fusion by freezing the $\mathbf{{Tx}_{AV}}$ and $\mathbf{{Tx}_{TV}}$ blocks using the following strategies:
+
+\begin{itemize}
+    \item \textbf{A-max:} $pred_{class}=\argmaxA_i (TV_{logits}(i)+AV_{logits}(i))/2$
+    \item \textbf{D-max:} $pred_{class}=\argmaxA_i max\{(TV_{logits}(i),AV_{logits}(i))\}$
+\end{itemize}
+Here $i \in \{1,...Class\}$, where $Class$ refers to the number of classes associated with the task.
+
+ \begin{figure}
+ \centering
+    \includegraphics[width=0.8\textwidth]{figures/perceiver_architecture.png}
+    \caption{PerceiverIO architecture \cite{Jaegle2021PerceiverIA}}
+    \label{Perceiver}
+ \end{figure}
+
 \section{Experiments}
-\subsection{Topic categorization}
-\subsection{Tone transition}
-\subsection{Absence/Presence of socially relevant cues}
-\section{Progressive multimodal fusion of contextual streams}
-\section{Experiments and Results}
+\subsection{Experimental Setup}
+For training, validation, and testing purposes, we consider a split of 5877 (\textbf{70\%}), 830 (\textbf{10\%}), and 1692 (\textbf{20\%}) videos. The modality-specific details are as follows:
+
+\textbf{\underline{Visual:}} For the visual modality, we segment the videos into shots using \texttt{PySceneDetect}\footnote{https://github.com/Breakthrough/PySceneDetect}. We use the shots to extract frame-wise features at 4 fps using CLIP's \cite{Radford2021LearningTV} pretrained visual encoder ($f_{visual}$), \texttt{ViT-B/32}. Further, we average pool the frame-wise visual representations to obtain shot representations. For modeling temporal context information through visual modality, we consider the shot as the basic unit due to its ability to capture short-term temporal variations. \\
+ \textbf{\underline{Text:}} For the text modality, we use Whisper \cite{Radford2022RobustSR} multilingual model (\texttt{large}) to extract the transcripts.  We translate the multilingual transcripts to English using \texttt{GPT-4} \cite{OpenAI2023GPT4TR} (\textit{temp=0.02, max tokens=2048}) by providing the following translation-specific prompt: \textit{\textbf{Please provide an English translation of this transcript}}. We use the pretrained BERT\cite{Devlin2019BERTPO} model as the text encoder ($f_{text}$). The translated transcripts contain details about the foreground context in terms of narrations regarding interactions.\\
+ \textbf{\underline{Audio:}} For the audio modality, we use the Audio-Spectrogram transformer (AST) \cite{gong21b_interspeech} model ($f_{audio}$) pretrained on AudioSet \cite{Gemmeke2017AudioSA} for extracting features at 10-sec intervals with a step size of 512.  \\
+ We conduct our experiments in a distributed manner using the Pytorch \cite{Paszke2019PyTorchAI} framework on 4 2080ti GPUs. We use \textbf{accuracy} and \textbf{macro-F1} for evaluation metrics.
+ \subsection{Language-based reasoning}
+We investigate the zero-shot capabilities of foundational large language models \cite{Zhao2023ASO} by applying \texttt{GPT-4} \cite{OpenAI2023GPT4TR}, \texttt{Opt-IML} \cite{Iyer2022OPTIMLSL}, \texttt{Flan-T5} (XXL,XL,L) \cite{Chung2022ScalingIL} and \texttt{Alpaca} \cite{alpaca} on the translated transcripts. We report the results on 1670 non-empty transcripts out of the test split of 1692 samples for zero-shot evaluation. For \texttt{GPT-4} we use the following task-specific prompts:
+\begin{itemize}
+    \item \textbf{SM:} \textit{An advertisement video has a social message if it provides awareness about any social issue. Example of social issues: gender equality, drug abuse, police brutality, workplace harassment, domestic violence, child labor, environmental damage, homelessness, hate crimes, racial inequality etc. Based on the given text transcript, determine if the advertisement has any social message. Please provide answers in \textbf{Yes} and \textbf{No.}}
+    \item \textbf{TT:} \textit{Based on the given text transcript from the advertisement, determine if the advertisement has any transitions in tones. Possible tone labels are: positive, negative, and neutral. Please respond by saying \textbf{Transition} or \textbf{No transition}}
+    \item \textbf{Topic:} \textit{Associate a single topic label with the transcript from the given set: $<$Topic list$>$}
+\end{itemize}
+Here \textbf{SM}, \textbf{TT}, and \textbf{Topic} refer to the benchmark tasks of Social message detection, tone transition, and topic categorization. $<$Topic list$>$ refers to the condensed list of 18 topic categories curated for the MM-AU benchmark. Further details about the prompting strategies are included as part of the Appendix (\ref{app:language_baselines}).
+\subsection{Unimodal and Multimodal context fusion}
+For the supervised unimodal baselines we consider the following model choices:
+\begin{itemize}
+    \item \textbf{LSTM \cite{lstm}:} 2 layers and hidden dimension = 256
+    \item \textbf{MHA \cite{transformers}:} 4 layers, 4 heads and hidden dimension = 256
+\end{itemize}
+For the fusion blocks $\mathbf{{Tx}_{AV}}$ and $\mathbf{{Tx}_{TV}}$, we adopt a lightweight PerceiverIO structure composed of 4 encoder layers, 16 latent vectors, 8 heads, and a hidden latent dimensionality of 256. We use binary cross-entropy for social message and tone transition detection tasks and multi-class cross-entropy for topic categorization. For training the unimodal and multimodal models, we use a batch size of 16 with Adam \cite{Kingma2015AdamAM} or AdamW \cite{AdamW} as optimizers and $lr \in \{1e-4, 1e-5\}$. While training the supervised models, we fix the maximum sequence lengths for visual(shots), audio, and text modalities at 35, 14, and $\{256,512\}$, respectively. During multimodal fusion, when text is missing in the transcripts due to the absence of speech, we replace the text with a string of \texttt{[MASK]} tokens.
+
+\section{Results}
+
 \subsection{Language-only reasoning}
-\subsection{Unimodal vs Multimodal baselines}
+
+\begin{table}[h!]
+\resizebox{\columnwidth}{!}{
+\begin{tabular}{|cc|cc|cc|cc|}
+\hline
+\multicolumn{2}{|c|}{\textbf{Configurations}}                & \multicolumn{2}{c|}{\textbf{SM}}                & \multicolumn{2}{c|}{\textbf{TT}}                & \multicolumn{2}{c|}{\textbf{Topic}}             \\ \hline
+\multicolumn{1}{|c|}{\textbf{Model}}       & \textbf{Params} & \multicolumn{1}{c|}{\textbf{Acc}} & \textbf{F1} & \multicolumn{1}{c|}{\textbf{Acc}} & \textbf{F1} & \multicolumn{1}{c|}{\textbf{Acc}} & \textbf{F1} \\ \hline
+\multicolumn{1}{|c|}{\textbf{GPT-4 \textcolor{red}{\cite{OpenAI2023GPT4TR}}}}       & $NA^{*}$             & \multicolumn{1}{c|}{\textbf{87.6}}         & \textbf{65.66}    & \multicolumn{1}{c|}{\textbf{58.56}}        & \textbf{58.33}       & \multicolumn{1}{c|}{\textbf{33.29}}       & \textbf{29.21}       \\ \hline
+\multicolumn{1}{|c|}{\textbf{Flan-T5-XXL \textcolor{red}{\cite{Chung2022ScalingIL}}}} & 11B             & \multicolumn{1}{c|}{85.69}        & 62.7        & \multicolumn{1}{c|}{54.79}        & 44.15       & \multicolumn{1}{c|}{30.54}        & 24.23       \\ \hline
+\multicolumn{1}{|c|}{\textbf{Flan-T5-XL \textcolor{red}{\cite{Chung2022ScalingIL}}}}  & 3B              & \multicolumn{1}{c|}{65.51}        & 49.31       & \multicolumn{1}{c|}{54.67}        & 42.39       & \multicolumn{1}{c|}{27.18}        & 24.1        \\ \hline
+\multicolumn{1}{|c|}{\textbf{Alpaca  \textcolor{red}{\cite{alpaca}}}}      & 7B              & \multicolumn{1}{c|}{10.77}        & 10.56       & \multicolumn{1}{c|}{46.88}        & 39.1        & \multicolumn{1}{c|}{11.19}        & 11.68       \\ \hline
+\multicolumn{1}{|c|}{\textbf{Opt-IML \textcolor{red}{\cite{Iyer2022OPTIMLSL}}}}     & 1.3B            & \multicolumn{1}{c|}{37.07}        & 32.49       & \multicolumn{1}{c|}{54.37}        & 35.22       & \multicolumn{1}{c|}{22.22}        & 19.08       \\ \hline
+\multicolumn{1}{|c|}{\textbf{Flan-T5-L \textcolor{red}{\cite{Chung2022ScalingIL}}}}   & 780M            & \multicolumn{1}{c|}{8.32}         & 7.76        & \multicolumn{1}{c|}{54.43}        & 35.25       & \multicolumn{1}{c|}{26.82}        & 19.42       \\ \hline
+\multicolumn{1}{|c|}{Random Baseline}      & \textbf{-}           & \multicolumn{1}{c|}{49.57}        & 39.61       & \multicolumn{1}{c|}{49.95}        & 49.88        & \multicolumn{1}{c|}{5.71}        & 4.71 \\ \hline
+\multicolumn{1}{|c|}{Majority Baseline}      & \textbf{-}           & \multicolumn{1}{c|}{90.96}        & 47.63       & \multicolumn{1}{c|}{54.11}        & 35.11        & \multicolumn{1}{c|}{23.04}        & 2.08 \\ \hline
+\end{tabular}
+}
+\caption{Zero shot performance comparison between various LLMs on MM-AU dataset.
+Tasks: \textit{SM}: Social message detection, \textit{TT}: Tone transition, \textit{Topic}: Topic categorization. $NA^{*}:$  Information not available.  F1: Macro-F1. Best performing results are marked in bold for respective tasks.}
+\label{llm}
+\end{table} 
+
+Based on results in Table \ref{llm}, we can see that \texttt{GPT-4} exhibits superior zero-shot performance (F1 and Accuracy) across all the tasks when compared to other large language models. Further, there is a trend towards improved model performance with model scaling, except for \texttt{Alpaca}. The poor performance of \texttt{Alpaca} can be attributed to a lack of self-instruct data associated with complex reasoning tasks from transcripts. Instruction finetuning coupled with model scaling improves the zero-shot performance (F1) of T-5 models from \textbf{49.31\%} to \textbf{62.7\%} and \textbf{42.39\%} to \textbf{44.15\%} for social message and tone transition tasks respectively.  
+\par
+We provide class-wise comparisons between \texttt{Flan-T5-XXL} and \texttt{GPT-4} for the three benchmark tasks of social message, tone transition detection, and topic categorization. From Fig \ref{tone_transition_social_message} (a), we can see that \texttt{GPT-4} obtains a higher F1-score (\textbf{38.21\%}) as compared to \texttt{Flan-T5-XXL} (\textbf{33.52\%}) for the \textbf{Yes} class signifying the presence of social message in a complete zero-shot setting. Further for the tone-transition task, \texttt{GPT-4} obtains a significantly higher F1-score (\textbf{55.18\%}) for the \textbf{Transition} class than \texttt{Flan-T5-XXL} (\textbf{19.75\%}). In terms of topic categorization, we can see from Fig \ref{gpt_4_flan_t5_xxl_topic} that \texttt{GPT-4} performs better than \texttt{Flan-T5-XXL} in the case of all categories, except for the \textbf{Awareness} class.  For the minority topic categories i.e. \textbf{Retail}, \textbf{Publications media}, \textbf{Industrial and Agriculture}, \texttt{GPT-4} performs slightly better than \texttt{Flan-T5-XXL}. The poor performance of \texttt{GPT-4} and \texttt{Flan-T5-XXL} in the \textbf{Misc} category can be attributed to the grouping of multiple diverse subcategories like \textbf{Petfood}, \textbf{Business and equipment}, \textbf{Politics} into a single large category. Future work will involve the usage of expanded topic taxonomy to mark the transcripts with respective categories by incorporating reasoning mechanisms like chain of thought prompting \cite{Wei2022ChainOT}.
+
+\begin{figure}[h!]
+\begin{subfigure}{.50\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{figures/gpt_4_flan_t5_xxl_social_message.pdf}
+  \caption{F1-score for social message detection task class wise}
+  \label{class_wise_social_message}
+\end{subfigure}%
+\begin{subfigure}{.50\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{figures/gpt_4_flan_t5_xxl_transition.pdf}
+  \caption{F1-score for tone transition detection task class wise}
+  \label{class_wise_tone_transition}
+\end{subfigure}
+\caption{Comparisons between \texttt{Flan-T5-XXL} and \texttt{GPT-4} in terms of class-wise F1-score for the social message (Yes: Presence of social message, No: Absence of social message), Tone transition detection tasks.}
+\label{tone_transition_social_message}
+\end{figure}
+
+\begin{figure}[h!]
+    \includegraphics[width=\textwidth]{figures/gpt_4_flan_t5_xxl_topic.pdf}
+    \caption{Comparisons between \texttt{Flan-T5-XXL} and \texttt{GPT-4} in terms of class-wise F1-score for the topic categorization task}
+    \label{gpt_4_flan_t5_xxl_topic}
+\end{figure}
+
+
+\subsection{Unimodal vs Multimodal context fusion}
+
+\begin{table}[h!]
+\centering
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|ccccccccc|}
+\hline
+\multicolumn{3}{|c|}{\textbf{Configurations}}                                                                               & \multicolumn{1}{c|}{\textbf{Acc}} & \multicolumn{1}{c|}{\textbf{F1}} & \multicolumn{1}{c|}{\textbf{Acc}} & \multicolumn{1}{c|}{\textbf{F1}} & \multicolumn{1}{c|}{\textbf{Acc}}   & \textbf{F1}  \\ \hline
+\multicolumn{1}{|c|}{\textbf{Model}}      & \multicolumn{1}{c|}{\textbf{Features}} & \multicolumn{1}{c|}{\textbf{Modality}} & \multicolumn{2}{c|}{\textbf{Social message}}                         & \multicolumn{2}{c|}{\textbf{Tone transition}}                        & \multicolumn{2}{c|}{\textbf{Topic categorization}} \\ \hline
+\multicolumn{1}{|c|}{\textbf{Random}}     & \multicolumn{1}{c|}{NA}                & \multicolumn{1}{c|}{NA}                & \multicolumn{1}{c|}{49.57±0.28}   & \multicolumn{1}{c|}{39.61±0.28}  & \multicolumn{1}{c|}{49.95±0.30}   & \multicolumn{1}{c|}{49.88±0.30}  & \multicolumn{1}{c|}{5.71±0.16}      & 4.71±0.24    \\ \hline
+\multicolumn{1}{|c|}{\textbf{Majority}}   & \multicolumn{1}{c|}{NA}                & \multicolumn{1}{c|}{NA}                & \multicolumn{1}{c|}{90.96}        & \multicolumn{1}{c|}{47.63}       & \multicolumn{1}{c|}{54.11}        & \multicolumn{1}{c|}{35.11}       & \multicolumn{1}{c|}{23.04}          & 2.08         \\ \hline
+\multicolumn{9}{|c|}{\textbf{Unimodal}}                                                                                                                                                                                                                                                                                        \\ \hline
+\multicolumn{1}{|c|}{\textbf{LSTM}}       & \multicolumn{1}{c|}{CLIP-S}            & \multicolumn{1}{c|}{V}                 & \multicolumn{1}{c|}{90.57±0.47}   & \multicolumn{1}{c|}{68.65±1.70}  & \multicolumn{1}{c|}{61.93±0.37}   & \multicolumn{1}{c|}{61.65±0.37}  & \multicolumn{1}{c|}{52.86±0.43}     & 36.48±1.58   \\ \hline
+\multicolumn{1}{|c|}{\textbf{MHA}}        & \multicolumn{1}{c|}{AST}               & \multicolumn{1}{c|}{A}                 & \multicolumn{1}{c|}{89.07±2.02}   & \multicolumn{1}{c|}{55.33±3.96}  & \multicolumn{1}{c|}{59.78±1.56}   & \multicolumn{1}{c|}{58.60±0.96}  & \multicolumn{1}{c|}{25.11±1.39}     & 15.48±1.57   \\ \hline
+\multicolumn{1}{|c|}{\textbf{MHA}}        & \multicolumn{1}{c|}{CLIP-S}            & \multicolumn{1}{c|}{V}                 & \multicolumn{1}{c|}{90.41±2.24}   & \multicolumn{1}{c|}{72.28±1.66}  & \multicolumn{1}{c|}{61.74±1.07}   & \multicolumn{1}{c|}{61.48±1.11}  & \multicolumn{1}{c|}{61.30±0.89}     & 47.74±1.27   \\ \hline
+\multicolumn{9}{|c|}{\textbf{Multimodal}}                                                                                                                                                                                                                                                                                      \\ \hline
+\multicolumn{1}{|c|}{$\mathbf{Tx_{AT}}$}      & \multicolumn{1}{c|}{AST + BERT}        & \multicolumn{1}{c|}{A + T}             & \multicolumn{1}{c|}{90.24±0.81}   & \multicolumn{1}{c|}{64.02±0.81}  & \multicolumn{1}{c|}{62.98±0.56}   & \multicolumn{1}{c|}{62.29±0.83}  & \multicolumn{1}{c|}{42.99±0.65}     & 30.77±0.96   \\ \hline
+\multicolumn{1}{|c|}{\textbf{(1) $\mathbf{Tx_{AV}}$}}  & \multicolumn{1}{c|}{CLIP-S +AST}       & \multicolumn{1}{c|}{A + V}             & \multicolumn{1}{c|}{91.62±0.58}   & \multicolumn{1}{c|}{70.05±0.67}  & \multicolumn{1}{c|}{64.01±0.54}   & \multicolumn{1}{c|}{63.72±0.66}  & \multicolumn{1}{c|}{61.62±0.46}     & 48.67±0.64   \\ \hline
+\multicolumn{1}{|c|}{\textbf{(2) $\mathbf{Tx_{TV}}$}}  & \multicolumn{1}{c|}{CLIP-S +BERT}      & \multicolumn{1}{c|}{T + V}             & \multicolumn{1}{c|}{\textbf{92.23±0.57}}  & \multicolumn{1}{c|}{\textbf{74.03±1.00}}  & \multicolumn{1}{c|}{63.96±0.99}   & \multicolumn{1}{c|}{63.48±0.84}  & \multicolumn{1}{c|}{63.27±0.59}     & 50.58±1.32   \\ \hline
+\multicolumn{1}{|c|}{\textbf{A-Max(1,2)}} & \multicolumn{1}{c|}{CLIP-S +BERT +AST} & \multicolumn{1}{c|}{A + V + T}          & \multicolumn{1}{c|}{92.51±0.46}   & \multicolumn{1}{c|}{73.17±1.00}  & \multicolumn{1}{c|}{\textbf{65.05±0.36}}   & \multicolumn{1}{c|}{\textbf{64.67±0.33}} & \multicolumn{1}{c|}{\textbf{65.92±0.54}}     & \textbf{54.22±1.14}  \\ \hline
+\multicolumn{1}{|c|}{\textbf{D-Max(1,2)}} & \multicolumn{1}{c|}{CLIP-S +BERT +AST} & \multicolumn{1}{c|}{A + V + T}          & \multicolumn{1}{c|}{92.52±0.46}   & \multicolumn{1}{c|}{73.21±0.98}  & \multicolumn{1}{c|}{65.01±0.39}   & \multicolumn{1}{c|}{64.63±0.32}  & \multicolumn{1}{c|}{65.51±0.58}     & 53.67±1.24   \\ \hline
+\end{tabular}
+}
+\caption{Comparative results between different unimodal and multimodal context fusion models across different tasks: Social message and Tone transition, Topic categorization. \textbf{\textit{\underline{CLIP-S}}}: Shot level features extracted using CLIP. \textbf{\textit{\underline{Modality:}}} A: Audio, V: Visual, T: Text. Results are reported as an average of 5 runs with randomly selected seeds. Best performing results are marked in bold for respective tasks.}  
+\label{exptable}
+\end{table}
+
+From Table \ref{exptable}, we can see that supervised unimodal models (MHA, LSTM) show improved performance as compared to simple random and majority baselines. In terms of unimodal models, MHA model trained on shot-level visual features (denoted by CLIP-S) perform far better than audio features (AST) in social message detection (\textbf{F1: 72.28} vs \textbf{F1: 55.33}) and topic categorization tasks.
+(\textbf{F1: 47.74} vs \textbf{F1: 15.48}). For the tone transition task, MHA model trained on audio features (AST) shows close performance (\textbf{F1:58.60} vs \textbf{F1: 61.48}) as compared to visual features, due to the dependence of the tone transition task on the ambient music. \\
+For multimodal models, we observe that the fusion of text and visual modalities through a Perceiver-IO-based encoder ($\mathbf{Tx_{TV}}$) performs better (\textbf{F1:74.03}) for social message detection compared to audio-visual or audio-text fusion. This can be attributed to the presence of socially relevant descriptors in the transcripts and video shots. However, the fusion of audio with visual signals ($\mathbf{Tx_{AV}}$) improves the performance in the tone-transition detection task (\textbf{F1: 63.72}). For topic categorization, we find that the fusion of text and visual modalities ($\mathbf{Tx_{TV}}$) performs better than other paired modalities (\textbf{F1:50.58}) due to topic-specific identifiers in transcripts and shots. 
+\par
+ Our proposed approach based on logit fusion strategies: Average-Max (\textbf{A-Max}) and Dual-Max (\textbf{D-Max}) exhibits similar performance across all tasks. We obtain gain for tone-transition (\textbf{F1:64.67}) based on the \textbf{A-Max} fusion strategy of $\mathbf{Tx_{AV}}$ and $\mathbf{Tx_{TV}}$ models. In terms of class-wise metrics, \textbf{A-Max} fusion improves the transition class average F1-score to \textbf{61.28\%} as compared to $\mathbf{Tx_{AV}}$ (\textbf{60.72\%}) and $\mathbf{Tx_{TV}}$ (\textbf{60.18\%}). In the case of topic categorization, logit fusion through \textbf{A-Max} of $\mathbf{Tx_{AV}}$ and $\mathbf{Tx_{TV}}$ models results in the best performance (\textbf{F1: 54.22}). Further, \textbf{A-Max} fusion results in improvements over $\mathbf{Tx_{AV}}$ and $\mathbf{Tx_{TV}}$ across 15 topic categories (out of 18), with noticeable gains in the minority categories i.e., Retail ($\sim${\textbf{6.2\%}}), Industrial \& Agriculture ($\sim$\textbf{5\%}), Household ($\sim$\textbf{7\%}). Similar trends can be observed for \textbf{D-Max} fusion, with improvements obtained across 14 topic categories (out of 18).
+
 \section{Limitations}
 \section{Conclusions}
 

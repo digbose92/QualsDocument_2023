@@ -25,3 +25,148 @@ We provide the mapping between Cannes(CC) \cite{cannes-lions}, Ads of the World 
     \item \textbf{Retail:} Retail \& e-commerce [\textcolor{purple}{\textbf{CC}}]; Shopping (department stores, drug stores, groceries, etc.) [\textcolor{blue}{\textbf{VA}}]; Retail Services [\textcolor{red}{\textbf{AOW}}]
 \end{itemize}
 The taxonomy sources are listed within [.] for respective subcategories for the final list of topic categories. 
+
+
+\section{MM-AU Experiments}
+\label{app:language_baselines}
+\subsection{Language based reasoning}
+
+We investigate the zero-shot performance of several large language models i.e. \texttt{GPT-4}\cite{OpenAI2023GPT4TR}, \texttt{Opt-IML} \cite{Iyer2022OPTIMLSL}, \texttt{Flan-T5} (XXL,XL,L) \cite{Chung2022ScalingIL} and \texttt{Alpaca} \cite{alpaca} on the benchmark tasks associated with \textbf{MM-AU} dataset. For zero-shot evaluation, we report the results on 1670 non-empty transcripts out of the test split of 1692 samples.
+\subsubsection{Flan-T5:}
+For \texttt{Flan-T5}, we use the following prompts for the social message (\textbf{SM}), tone transition (\textbf{TT}), topic categorization(\textbf{Topic}) tasks: 
+\begin{itemize}
+
+\item \textbf{\underline{TT:}} 
+\texttt{<Text from transcript>} \\
+\textit{Based on the given text transcript from the advertisement, determine if the advertisement has any transitions in tones.} \\ 
+\textbf{OPTIONS:}
+\begin{itemize}
+\item[-] Transition
+\item[-] No transition
+\end{itemize}
+\textbf{ANSWER:}
+
+\item \textbf{\underline{SM:}}
+\texttt{<Text from transcript>} \\
+\textit{An advertisement video has a social message if it provides awareness about any social issue. Examples of social issues: gender equality, drug abuse, police brutality, workplace harassment, domestic violence, child labor, environmental damage, homelessness, hate crimes, racial inequality etc. Based on the given text transcript, determine if the advertisement has any social message.}\\
+\textbf{OPTIONS:}
+\begin{itemize}
+\item[-] Yes
+\item[-] No
+\end{itemize}
+ANSWER: 
+
+\item \textbf{\underline{Topic:}}
+\texttt{<Text from transcript>} \\
+\textit{Associate a single topic label with the transcript from the given set:} \\
+\textbf{OPTIONS:}
+\begin{itemize}
+\item [-] Games
+\item [-] Household
+\item [-] Services
+\item [-] Sports 
+\item [-] Banking 
+\item [-] Clothing 
+\item [-] Industrial and agriculture 
+\item [-] Leisure 
+\item [-] Publications media 
+\item [-] Health 
+\item [-] Car 
+\item [-] Electronics 
+\item [-] Cosmetics 
+\item [-] Food and drink 
+\item [-] Awareness 
+\item [-] Travel and transport 
+\item [-] Retail 
+\end{itemize}
+\textbf{ANSWER:}
+\end{itemize}
+
+\subsubsection{OPT:} For \texttt{OPT}, we use the following prompt templates for different tasks:
+
+\begin{itemize}
+
+    \item \textbf{\underline{TT:}} \textit{Instruction: In this task, you are given a transcription of an advertisement, determine if the advertisement has any transitions in tones.} \\
+    \textbf{Transcription:} \texttt{<Text from transcript>}\\
+    \textbf{OPTIONS:}
+    \begin{itemize}
+    \item[-] Transition
+    \item[-] No transition
+    \end{itemize}
+   \textbf{Answer:}
+
+    \item \textbf{\underline{SM:}} \textit{In this task, you are given a transcription of an advertisement. An advertisement video has a social message if it provides awareness about any social issue. Example of social issues: gender equality, drug abuse, police brutality, workplace harassment, domestic violence, child labor, environmental damage, homelessness, hate crimes, racial inequality etc. Your task is to give label "Yes" if the advertisement given has any social message, otherwise give label "No".} \\
+    \textbf{Transcription:} \texttt{<Text from transcript>}\\
+    \textbf{Answer:}
+    
+    \item \textbf{\underline{Topic:}} \textit{In this task, you are given a transcription of an advertisement. Your task is to associate a single topic label with the transcript from the given set.} \\
+    \textbf{Transcription:} \texttt{<Text from transcript>}\\
+    \textbf{OPTIONS:}
+    \begin{itemize}
+    \item [-] Games
+    \item [-] Household
+    \item [-] Services
+    \item [-] Sports 
+    \item [-] Banking 
+    \item [-] Clothing 
+    \item [-] Industrial and agriculture 
+    \item [-] Leisure 
+    \item [-] Publications media 
+    \item [-] Health 
+    \item [-] Car 
+    \item [-] Electronics 
+    \item [-] Cosmetics 
+    \item [-] Food and drink 
+    \item [-] Awareness 
+    \item [-] Travel and transport 
+    \item [-] Retail 
+    \end{itemize}
+    \textbf{Answer:}
+\end{itemize}
+
+\subsubsection{alpaca:} 
+For \texttt{alpaca}, we use the following prompt templates for different tasks:
+
+\begin{itemize}
+    \item \textbf{\underline{TT:}} \textit{Instruction: In this task, you are given a transcription of an advertisement determine if the advertisement has any transitions in tones.}\\
+\textbf{Transcription}: \texttt{<Text from transcript>}\\
+\textbf{Options:}
+\begin{itemize}
+\item[-] Transition
+\item[-] No transition
+\end{itemize}
+\textbf{Answer:}
+\item \textbf{\underline{SM:}} \textit{Instruction: In this task, you are given a transcription of an advertisement. An advertisement video has a social message if it provides awareness about any social issue. Example of social issues: gender equality, drug abuse, police brutality, workplace harassment, domestic violence, child labor, environmental damage, homelessness, hate crimes, racial inequality etc. Based on the given text transcript, determine if the advertisement has any social message. }\\
+    \textbf{Transcription:} \texttt{<Text from transcript>}\\
+\textbf{Options:}
+\begin{itemize}
+\item[-] Yes
+\item[-] No
+\end{itemize}
+\textbf{Answer:}
+\item \textbf{\underline{Topic:}} \textit{Instruction: In this task, you are given a transcription of an advertisement. Your task is to associate a single topic label with the transcript from the given set.}\\
+\textbf{Transcription:} \texttt{<Text from transcript>}\\
+\textbf{Options:}
+    \begin{itemize}
+    \item [-] Games
+    \item [-] Household
+    \item [-] Services
+    \item [-] Sports 
+    \item [-] Banking 
+    \item [-] Clothing 
+    \item [-] Industrial and agriculture 
+    \item [-] Leisure 
+    \item [-] Publications media 
+    \item [-] Health 
+    \item [-] Car 
+    \item [-] Electronics 
+    \item [-] Cosmetics 
+    \item [-] Food and drink 
+    \item [-] Awareness 
+    \item [-] Travel and transport 
+    \item [-] Retail 
+\end{itemize}
+\textbf{Answer:}
+\end{itemize}
+For \texttt{GPT-4} we use the recently released API to pass the prompts for individual tasks.
+For \texttt{Flan-T5} and \texttt{Opt-IML}, we use the publicly available models as a part of Huggingface \cite{wolf-etal-2020-transformers} library. For \texttt{alpaca}, we use the publicly available implementation in Github \cite{alpaca}. The large language models sometimes assign a label to the prediction that does not lie within the set of valid labels for the respective tasks. In the case of those samples, we randomly assign a label from the task-specific label taxonomy. 
