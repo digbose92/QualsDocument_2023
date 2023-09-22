@@ -476,14 +476,50 @@ We provide class-wise comparisons between \texttt{Flan-T5-XXL} and \texttt{GPT-4
 
 From Table \ref{exptable}, we can see that supervised unimodal models (MHA, LSTM) show improved performance as compared to simple random and majority baselines. In terms of unimodal models, MHA model trained on shot-level visual features (denoted by CLIP-S) perform far better than audio features (AST) in social message detection (\textbf{F1: 72.28} vs \textbf{F1: 55.33}) and topic categorization tasks.
 (\textbf{F1: 47.74} vs \textbf{F1: 15.48}). For the tone transition task, MHA model trained on audio features (AST) shows close performance (\textbf{F1:58.60} vs \textbf{F1: 61.48}) as compared to visual features, due to the dependence of the tone transition task on the ambient music. \\
-For multimodal models, we observe that the fusion of text and visual modalities through a Perceiver-IO-based encoder ($\mathbf{Tx_{TV}}$) performs better (\textbf{F1:74.03}) for social message detection compared to audio-visual or audio-text fusion. This can be attributed to the presence of socially relevant descriptors in the transcripts and video shots. However, the fusion of audio with visual signals ($\mathbf{Tx_{AV}}$) improves the performance in the tone-transition detection task (\textbf{F1: 63.72}). For topic categorization, we find that the fusion of text and visual modalities ($\mathbf{Tx_{TV}}$) performs better than other paired modalities (\textbf{F1:50.58}) due to topic-specific identifiers in transcripts and shots. 
+\textbf{\underline{Multimodal models:}} For multimodal models, we observe that the fusion of text and visual modalities through a Perceiver-IO-based encoder ($\mathbf{Tx_{TV}}$) performs better (\textbf{F1:74.03}) for social message detection compared to audio-visual or audio-text fusion. This can be attributed to the presence of socially relevant descriptors in the transcripts and video shots. However, the fusion of audio with visual signals ($\mathbf{Tx_{AV}}$) improves the performance in the tone-transition detection task (\textbf{F1: 63.72}). For topic categorization, we find that the fusion of text and visual modalities ($\mathbf{Tx_{TV}}$) performs better than other paired modalities (\textbf{F1:50.58}) due to topic-specific identifiers in transcripts and shots. 
 \par
- Our proposed approach based on logit fusion strategies: Average-Max (\textbf{A-Max}) and Dual-Max (\textbf{D-Max}) exhibits similar performance across all tasks. We obtain gain for tone-transition (\textbf{F1:64.67}) based on the \textbf{A-Max} fusion strategy of $\mathbf{Tx_{AV}}$ and $\mathbf{Tx_{TV}}$ models. In terms of class-wise metrics, \textbf{A-Max} fusion improves the transition class average F1-score to \textbf{61.28\%} as compared to $\mathbf{Tx_{AV}}$ (\textbf{60.72\%}) and $\mathbf{Tx_{TV}}$ (\textbf{60.18\%}). In the case of topic categorization, logit fusion through \textbf{A-Max} of $\mathbf{Tx_{AV}}$ and $\mathbf{Tx_{TV}}$ models results in the best performance (\textbf{F1: 54.22}). Further, \textbf{A-Max} fusion results in improvements over $\mathbf{Tx_{AV}}$ and $\mathbf{Tx_{TV}}$ across 15 topic categories (out of 18), with noticeable gains in the minority categories i.e., Retail ($\sim${\textbf{6.2\%}}), Industrial \& Agriculture ($\sim$\textbf{5\%}), Household ($\sim$\textbf{7\%}). Similar trends can be observed for \textbf{D-Max} fusion, with improvements obtained across 14 topic categories (out of 18).
+ \textbf{\underline{Logit fusion:}} Our proposed approach based on logit fusion strategies: Average-Max (\textbf{A-Max}) and Dual-Max (\textbf{D-Max}) exhibits similar performance across all tasks. We obtain gain for tone-transition (\textbf{F1:64.67}) based on the \textbf{A-Max} fusion strategy of $\mathbf{Tx_{AV}}$ and $\mathbf{Tx_{TV}}$ models. In terms of class-wise metrics, \textbf{A-Max} fusion improves the transition class average F1-score to \textbf{61.28\%} as compared to $\mathbf{Tx_{AV}}$ (\textbf{60.72\%}) and $\mathbf{Tx_{TV}}$ (\textbf{60.18\%}), as seen in Fig \ref{tone_transition_social_message_multimodal} (b). However, we observe from Fig \ref{tone_transition_social_message_multimodal} (a), that both average-Max (\textbf{A-Max}) and dual-Max (\textbf{D-Max}) fusion strategies do not help for social message detection (i.e., \textbf{Yes} class).
+ 
+ In the case of topic categorization, logit fusion through \textbf{A-Max} of $\mathbf{Tx_{AV}}$ and $\mathbf{Tx_{TV}}$ models results in the best performance (\textbf{F1: 54.22}). Further, \textbf{A-Max} fusion results in improvements over $\mathbf{Tx_{AV}}$ and $\mathbf{Tx_{TV}}$ across 15 topic categories (out of 18), with noticeable gains in the minority categories i.e., Retail ($\sim${\textbf{6.2\%}}), Industrial \& Agriculture ($\sim$\textbf{5\%}), Household ($\sim$\textbf{7\%}). Similar trends can be observed for \textbf{D-Max} fusion, with improvements obtained across 14 topic categories (out of 18). The detailed comparisons between $\mathbf{Tx_{AV}}$,  $\mathbf{Tx_{TV}}$, \textbf{A-Max} and \textbf{D-Max} can be found in Fig \ref{topic_multimodal}.
 
-\section{Limitations}
+
+ \begin{figure}[h!]
+\begin{subfigure}{.50\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{figures/multimodal_baselines_f1_score_social_message.pdf}
+  \caption{F1-score for social message detection task class-wise}
+  \label{class_wise_social_message_multimodal}
+\end{subfigure}%
+\begin{subfigure}{.50\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{figures/multimodal_baselines_f1_score_transition.pdf}
+  \caption{F1-score for tone transition detection task class-wise}
+  \label{class_wise_tone_transition_multimodal}
+\end{subfigure}
+\caption{Comparisons between $\mathbf{Tx_{AV}}$(\texttt{AV-Tx}), $\mathbf{Tx_{TV}}$(\texttt{TV-Tx}), \texttt{A-Max}, \texttt{D-Max} in terms of class-wise F1-score for the social message (Yes: Presence of social message, No: Absence of social message), Tone transition detection tasks. Average of 5 runs considered for the F1-score.}
+\label{tone_transition_social_message_multimodal}
+\end{figure}
+
+ \begin{figure*}[h!]
+    \includegraphics[width=\textwidth]{figures/multimodal_baselines_f1_score_topic.pdf}
+    \caption{Comparisons between $\mathbf{Tx_{AV}}$ (\texttt{AV-Tx}), $\mathbf{Tx_{TV}}$(\texttt{TV-Tx}), \textbf{A-Max}, \textbf{D-Max} in terms of class-wise F1-score for the topic categorization task. Average of 5 runs is considered for the F1-score.}
+    \label{topic_multimodal}
+\end{figure*}
+
 \section{Conclusions}
 
+We introduce a benchmark called MM-AU for a macro-level understanding of advertisement videos. Further, we consider the narrative-driven tasks of topic categorization, tone transition, and social message detection. 
+The major takeaways from this work are as follows:
 
+\begin{itemize}
+
+\item \textbf{Context-fusion:} Temporal and foreground context fusion through multiple modalities enable macro-level understanding of advertisement videos.
+
+\item \textbf{Narrative-driven understanding:} The proposed tasks can be further extended to include explicit modeling of context-based narrative transitions.
+
+\item \textbf{Importance of modalities:} As seen from the individual task-specific results, not all modalities contain useful signals. For a given macro-level task, there is a need to find the optimal fusion of context streams that can depend on a subset of input modalities.
+
+\end{itemize}
 
 
 
