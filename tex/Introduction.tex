@@ -146,7 +146,7 @@ Macro level provides an expanded view by referring to the broad thematic element
 
 \subsection{Instance-level content understanding}
 
-Instance level refers to content understanding at the scale of individual entities like objects and persons w.r.t. different attributes like \textbf{appearance}, \textbf{perceived emotional state}, \textbf{gender}, \textbf{age}, \textbf{skintone} and \textbf{occupation}. For example, in Fig \ref{instance_scale_understanding} (a) and (b), the instance-level view refers to the person with the green bounding box and the associated attributes of perceived age, gender, and affective state. In our work, we look at instance-level content understanding in terms of estimating the affective state of the person.
+Instance level refers to content understanding at the scale of individual entities like objects and persons w.r.t. different attributes like \textbf{appearance}, \textbf{perceived emotional state}, \textbf{gender}, \textbf{age}, \textbf{skintone} and \textbf{occupation}. For example, in Fig \ref{instance_scale_understanding} (a) and (b), the instance-level view refers to the person with the green bounding box and the associated attributes of perceived age, gender, and affective state. In our work, we look at instance-level content understanding in terms of estimating the person's affective state.
 
 \begin{figure}
  \centering
@@ -156,7 +156,7 @@ Instance level refers to content understanding at the scale of individual entiti
 \end{figure}
 
 
-\section{Organization of proposal}
+\section{Organization and contributions}
 
 \begin{figure}[h!]
     \centering
@@ -172,26 +172,29 @@ Context-guided attention improves multi-modal content understanding at diverse s
 \end{tcolorbox}
 
 
-We develop contextual approaches for improved multimodal content understanding at different scales: \textbf{instance-level} and \textbf{macro-level}.  In terms of input sources, we consider multi-modal media content, including \textbf{movies}, \textbf{TV shows}, \textbf{advertisements}, and \textbf{natural scene images}. Looking at the multimodal content from both instance and macro-level viewpoints provides a holistic understanding of given inputs. In terms of the distinction between context and modalities, we use modalities available in input sources to extract diverse forms of contextual information. Further, dissimilar modalities can provide similar types of contextual information. For example, both visual and audio modalities provide the necessary temporal context for various content-understanding tasks. An outline of the proposal is shown in Fig \ref{proposalorganization}, showing the relationships between input multimodal content and content understanding at different scales. \textbf{[External knowledge]}.For processing the contextual information, we propose context-guided attention mechanisms \textbf{[ADD HERE]}
-
-
-
-We consider multi-modal media content, including \textbf{movies}, \textbf{TV shows}, \textbf{advertisements}, and \textbf{in-the-wild} videos as the primary input sources for exploration. Since multi-modal media content is curated with the aim of portraying human-centered narratives \cite{CMI}, our focus is to obtain both \textbf{instance-level} and \textbf{macro-level} insights by combining multiple contextual signals in a multi-modal learning framework. As shown in Fig \ref{proposalorganization}, the contextual information is obtained through input multiple modalities as follows:
+We develop contextual approaches for improved multimodal content understanding at different scales: \textbf{instance-level} and \textbf{macro-level}.  In terms of input sources, we consider multi-modal media content, including \textbf{movies}, \textbf{TV shows}, \textbf{advertisements}, and \textbf{natural scene images}. Looking at the multimodal content from both instance and macro-level viewpoints provides a holistic understanding of given inputs. In terms of the distinction between context and modalities, we use modalities available in input sources to extract diverse forms of contextual information. Further, dissimilar modalities can provide similar types of contextual information. Certain examples of contextual information obtained through multiple modalities are as follows: 
 
 \begin{itemize}
-    \item  \textbf{Visual modality:} Captures \textbf{\textit{spatial/temporal context}} through visual semantic units i.e., objects, and persons captured over images and videos.
-    \item  \textbf{Language modality:} Captures \textbf{\textit{spatial context (semantic)}} through foreground based natural language descriptions of images.
-    \item  \textbf{Audio modality:} Captures \textbf{\textit{temporal context}} through audio events, background music and speech.
-
+    \item  \textbf{Visual modality:} Captures \textbf{\textit{spatial/temporal}} context through visual semantic units, i.e., objects and persons captured over images and videos.
+    \item  \textbf{Language modality:} Captures \textbf{\textit{spatial (semantic)/foreground}} context through foreground based natural language descriptions of images.
+    \item  \textbf{Audio modality:} Captures \textbf{\textit{temporal}} context through audio events, background music and speech.
 \end{itemize}
-Apart from the input modalities, we also consider external pretrained knowledge from multimodal models (obtained through web-scale data) as expert inputs.
+
+
+For example, both visual and audio modalities provide the necessary temporal context for various content-understanding tasks.
+\par 
+In the case of context processing, we leverage external knowledge from pretrained sources like vision-language models, language models, automatic speech recognition models, and domain-specific sources like screenplays and visual vocabularies. 
+An outline of the proposal is shown in Fig \ref{proposalorganization}, showing the relationships between input multimodal content and content understanding at different scales. For processing the contextual information, we propose context-guided attention mechanisms to improve multimodal content understanding at two scales: macro-level and instance-level. We consider multi-modal media content, including \textbf{movies}, \textbf{TV shows}, \textbf{advertisements}, and \textbf{in-the-wild} videos as the primary input sources for exploration.
 We combine the above-mentioned inputs in a content understanding framework in the following sequence of chapters:
 
 \begin{enumerate}
-    \item \textbf{Chapter 2}: We explore the problem of global context reasoning in the form of visual scene context from multi-modal data esp. movies, by leveraging external knowledge from pretrained multimodal model i.e., CLIP \cite{Radford2021LearningTV}.
-    \item \textbf{Chapter 3}: We utilize our insights from Chapter 1 to propose a multimodal context fusion approach for contextual human affect (\textbf{instance-level}) understanding in natural scenes and TV shows.
-    \item \textbf{Chapter 4}: We explore the fusion of spatial and temporal context through multiple input modalities for macro-level understanding in advertisement videos having dynamic contextual changes. 
-    \item \textbf{Chapter 4}: We propose an efficient information-theoretic framework to fuse contextual information in multimodal pretrained transformers for multi-scale content understanding tasks.
+    \item \textbf{Chapter 2}: We explore the problem of visual scene context processing in multi-modal data esp., movies, by leveraging external knowledge from pretrained multimodal model, i.e., CLIP \cite{Radford2021LearningTV} and domain-specific sources like screenplays, visual vocabularies. Further, we show the utility of visual scene context in improving macro-level content understanding in terms of genre.
+    
+    \item \textbf{Chapter 3}: We utilize our insights from Chapter 2 to propose a multimodal context fusion approach based on attention mechanism for human affect (\textbf{instance-level}) understanding in natural scenes and TV shows.
+    
+    \item \textbf{Chapter 4}: We explore the fusion of foreground and temporal context through multiple input modalities for macro-level understanding in advertisement videos along the lines of topic, tone transitions, and social relevance. 
+    
+    \item \textbf{Chapter 5}: We propose an efficient information-theoretic framework to fuse contextual information in multimodal pretrained transformers for content understanding tasks across different scales.
 \end{enumerate}
 
-\textbf{Chapter 5} is an ongoing work and will be extended into post-proposal for integration into final thesis dissertation.
+\textbf{Chapter 5} is an ongoing work and will be extended into post-proposal for integration into the final thesis dissertation.

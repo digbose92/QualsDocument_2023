@@ -1,6 +1,15 @@
 \chapter{Visual scene context guided content understanding}
 
-In this chapter, we consider the task of recognizing visual scene context in media content by leveraging pre-trained multimodal information.  Further, we also explore the role of pretrained visual scene representations in macro-level multimodal content understanding task i.e. genre classification.
+In this chapter, we consider the task of recognizing visual scene context in media content by leveraging pre-trained multimodal information from vision-language models, visual vocabularies, and screenplays. Further, we also explore the role of pretrained visual scene representations in macro-level multimodal content understanding tasks, i.e. genre classification. The overview of this work can be seen in the following diagram:
+
+\begin{figure}[h!]
+    \centering 
+     \includegraphics[width=\linewidth]{figures/visual_scene_context.pdf}
+     \caption{Overview of visual scene context guided content understanding.}
+     \label{visual_scene_context}
+\end{figure}
+
+
 \section{Role of scene as contextual signal}
 \begin{figure}[h!]
     \centering 
@@ -310,7 +319,7 @@ Following feature extraction, we perform temporal aggregation using LSTM \cite{l
 \textbf{3D Convolutional network models:} 
 We use I3D\cite{i3d}, R(2+1)D \cite{r2plus1d}, Slowfast \cite{feichtenhofer2019slowfast} as baseline 3D convolutional models in multi-label setup. I3D\cite{i3d} and Slowfast\cite{feichtenhofer2019slowfast} models have a Resnet50\cite{He2015} backbone whereas R(2+1)D \cite{r2plus1d} has a Resnet34\cite{He2015} backbone. All the models are initialized from Kinetics400 \cite{kinetics400} pretrained weights. For finetuning I3D\cite{i3d} and Slowfast\cite{feichtenhofer2019slowfast}, we use SGD with learning rates in $\{0.1,1e-3\}$ and weight decay of 1e-4. For R(2+1)D \cite{r2plus1d} we use Adam \cite{Kingma2015AdamAM} with learning rate 1e-4. Batch sizes for the models are varied between 16 and 32. \\
 \textbf{Video Transformer models:}
-For video transformer models, we consider the base TimeSformer model \cite{Bertasius2021IsSA} that considers 8 frames (224 x 224) as inputs. For finetuning TimeSformer \cite{Bertasius2021IsSA} model, we use SGD with learning rate 5e-3 and weight decay of 1e-4 and batch size of 8. For better speed-accuracy tradeoff we use the Video Swin Transformer model \cite{liu2021video}, \cite{liu2021Swin} called Swin-B with clip size of 32 frames (224 x 224) as inputs. For finetuning we use AdamW \cite{Loshchilov2019DecoupledWD} optimizer with learning rate 1e-4 and Cosine Annealing with batch size of 32. 
+For video transformer models, we consider the base TimeSformer model \cite{Bertasius2021IsSA} that considers 8 frames (224 x 224) as inputs. For finetuning TimeSformer \cite{Bertasius2021IsSA} model, we use SGD with learning rate 5e-3 and weight decay of 1e-4 and batch size of 8. For better speed-accuracy tradeoff we use the Video Swin Transformer model \cite{liu2021video}, \cite{liu2021Swin} called Swin-B with clip size of 32 frames (224 x 224) as inputs. For finetuning we use AdamW \cite{AdamW} optimizer with learning rate 1e-4 and Cosine Annealing with batch size of 32. 
 \par 
 Based on the results in Table \ref{visual movie models}, we can see that 2-layer LSTM model trained using features from Imagenet-21K pretrained ViT-B/16 performs better compared to features extracted using Resnet-18 model pretrained on Places2 dataset. This shows that features from Places2 pretrained models might not be optimal for scene recognition in the movie domain.
 In terms of end-to-end models, video transformers, including TimeSformer and Swin-B models outperform 3D convolutional models. Swin-B model performs better than other models by obtaining an average correlation of \textbf{0.497} and mean average precision of \textbf{44.4}.
