@@ -69,6 +69,25 @@ Information Bottleneck (IB) has been utilized for low-resource finetuning of BER
 
 \subsection{Information bottleneck and multimodality}
 
+\begin{figure}
+     \centering
+    \includegraphics[width=\textwidth]{figures/multimodal_IB.png}
+    \caption{Multimodal architecture outline for information bottleneck.}
+    \label{multimodal pretraining}
+\end{figure}
+
+The base multimodal pretrained architecture to be considered for information bottleneck-related study is shown in Fig \ref{multimodal pretraining} . Given two modalities $m_{1}$ and $m_{2}$, the sequence of operations can be listed as follows:
+
+\begin{align}
+    T_{m_{1}}&=f_{m_{1}}(X_{m_{1}}), T_{m_{2}}=f_{m_{2}}(X_{m_{2}})\\
+    Y&=F_{m_{1}m_{2}}([T_{m_{1}},T_{m_{2}}])
+\end{align}
+Here $T_{m_{i}}$ refers to the input embeddings for modality $m_{i}$ and $F_{m_{1}m_{2}}$ refers to the multimodal encoder for predicting the labels. For the multimodal setting, the information bottleneck regularizer can be written as follows:
+
+\begin{equation}
+    L_{IB}= I(Y;\{T_{m_{1}},T_{m_{2}}\}) - \beta I(\{X_{m_{1}},X_{m_{2}}\};\{T_{m_{1}},T_{m_{2}}\})
+\end{equation}
+
 \subsection{Proposed work (A) - Optimal task-specific representations}
 \label{Optimal task-specific representations}
 In the first part of the proposed work, we would like to benchmark the performance of various multimodal models under the impact of information bottleneck for content understanding tasks. Since finetuning multimodal models is a memory-intensive operation, we would like to explore the parameter settings under which optimal task-specific representations can be extracted after using the information bottleneck as a regularizer. The outline of the proposed work can be found in Fig \ref{optimal_task_representations}.
@@ -102,3 +121,31 @@ In terms of architecture, we plan to use the following based on different modali
 
 \subsection{Proposed work (B) - Characterizing robustness}
 
+Our previous approaches regarding macro and instance level content understanding relied on the assumption that the input sources are free from corruption. However, in real-life settings, the modalities associated with input sources undergo corruption as mentioned in the following examples:
+
+\begin{itemize}
+ \item \textbf{Acquisition failure:}  Failure of camera sensors in traffic intersections.
+ \item \textbf{Privacy concerns:} Privacy restrictions on accessing social media posts or chats.
+ \item \textbf{Noise corruptions:} Excessive noise in audio recordings to be used for emotion classification
+\end{itemize}
+
+In the second part of our proposed work, we plan to use the information bottleneck regularizer under the settings of corrupted modalities for pretrained multimodal models. The overall goal is to determine the robustness of the pretrained models with and without information bottleneck regularizer during finetuning. An outline of the corrupted modality setting with our previous optimal task-specific representation framework based on information bottleneck (IB) is shown in Fig \ref{robustness_multimodal_models}.
+
+\begin{figure}
+ \centering 
+ \includegraphics[width=\textwidth]{figures/robustness_multimodal_models.png}
+ \caption{Optimal macro and instance-level task representations based on information bottleneck under different parameter settings}
+ \label{robustness_multimodal_models}
+\end{figure}
+
+We plan to consider the following training and testing scenarios in the robustness study setting:
+
+\begin{itemize}
+
+\item \textbf{Scenario A:} Finetune multimodal model under different parameter settings with IB regularizer and non-corrupted modality inputs.
+\item \textbf{Scenario B:} Finetune multimodal model under different parameter settings with IB regularizer and corrupted modality inputs
+\item \textbf{Scenario C:} Finetune multimodal model under different parameter settings with IB regularizer and mutual information (MI) maximization between non-corrupted inputs and multimodal representations.
+
+\end{itemize}
+
+In the above-mentioned scenarios, the evaluation will be performed using corrupted modality data. We plan to use the datasets and architectures mentioned in the previous section for this study as well. 
