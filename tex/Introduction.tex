@@ -12,11 +12,12 @@ This chapter provides the necessary background material and details the organiza
     \item \textbf{Touch:} Feeling texture of objects 
     \item \textbf{Smell:} Distinguishing between pleasant and unpleasant odors.
 \end{itemize}
-For humans, the information from multiple sensory sources is processed by distinct regions of the brain for different perceptual tasks \cite{Alain2001WhatA,BornkesselSchlesewsky2015NeurobiologicalRO,Wallace2002HistochemicalIO}. While the visual input processing is handled by the occipital lobe in the brain, the auditory and language inputs are processed by specific regions of the temporal lobe. The sub-division of the human neural processing system into regions that can process a wide variety of modalities indicates the heterogeneity among different sources along with underlying commonalities, as shown in Fig \ref{}.
+For humans, the information from multiple sensory sources is processed by distinct regions of the brain for different perceptual tasks \cite{Alain2001WhatA,BornkesselSchlesewsky2015NeurobiologicalRO,Wallace2002HistochemicalIO}. While the visual input processing is handled by the occipital lobe in the brain, the auditory and language inputs are processed by specific regions of the temporal lobe. The sub-division of the human neural processing system into regions that can process a wide variety of modalities indicates the heterogeneity among different sources along with underlying commonalities, as shown in Fig \ref{cerebral_cortex_modalities}.
 
 \begin{figure}
     \includegraphics[width=\textwidth]{figures/cererbral_cortex_multiple_modalities.png}
     \caption{ (a)  Sensory modalities associated with real-world human perception  (b)  Specialized regions in brain where sensory information comes together and processed by different cortices}
+    \label{cerebral_cortex_modalities}
 \end{figure}
 
 In artificial intelligence, a given task is considered multi-modal if multiple sensory modalities are needed to solve the same. The goal of artificial intelligence is to develop autonomous agents that can learn from diverse input modalities to solve complex reasoning tasks. As mentioned by Liang et al. \cite{Liang2022FoundationsAR}, the key properties associated with learning from multimodal data are listed as follows:
@@ -52,12 +53,22 @@ The growing demand for multi-modal media content has led to various descriptive 
 
 \section{What is context ?}
 In computer vision, context \cite{contextvision} refers to any relevant information encompassing the attributes of the object and event considered, along with other entities (objects and events) in the given scene, both visual and non-visual. Contextual information enables a wide variety of tasks, including object recognition, human affect perception, and salient event detection in videos, by providing additional cues needed for accurate inference. For example, the visual scene in a given image provides the necessary contextual information to detect commonly co-occurring objects along with any atypical placements. In terms of object placements, utensils are more likely to be found in the kitchen as compared to bedrooms or stadiums. An example of context providing the required information to improve object recognition under challenging conditions (poor lighting, image blurring, ) is shown in Fig \ref{object recognition}. The blurred object (marked by a red circle), when viewed in isolation, is not recognizable. However, when the object is placed in the context of the entire visual scene i.e. office, we can see that it is likely to be a keyboard.
-\begin{figure}
+\begin{figure}[h!]
     \centering 
      \includegraphics[width=0.6\linewidth]{figures/blurred_object.png}
      \caption{ \textbf{LEFT:} A blurred object (marked in red circle), when viewed in isolation, is not recognizable. \textbf{RIGHT:} Contextual information in the form of the visual scene helps in recognition. Image source: \cite{Marques2010ContextMI}}
      \label{object recognition}
 \end{figure}
+
+Context also refers to the situation surrounding our responses and actions \cite{baez2018does}. An example of situational context can be seen in Fig \ref{context situation}. When the face is only considered, it conveys pain. However, by taking the entire situation into context involving the celebration, it can be inferred that the person is happy based on bodily expressions and the event (sports match). 
+
+\begin{figure}[h!]
+    \centering 
+    \includegraphics[width=0.6\linewidth]{figures/context_situation.png}
+    \caption{Example of the situation as context information. Image source: \cite{barrettcontext} }
+    \label{context situation}
+\end{figure}
+
 
 The broad organization of different context sources, along with associated levels is shown in Fig \ref{Context_type}.
 \begin{figure}[t]
@@ -110,7 +121,6 @@ Global context utilizes \textit{the overall configuration of the scene as a sour
 \par 
 Visual scene, along with the associated environment provides the prior context for finding certain objects. For example, there is a greater likelihood of finding utensils in the kitchen (\textbf{indoor visual scene}) as compared to train station (\textbf{outdoor visual scene}). Global context information (in the form of visual scenes) also influences the relative placement of different objects, like the proximity of a keyboard to the monitor in an office setup. Further, the accurate identification of different objects as part of the local contextual information in a given image/video can also help 
 in recognizing the given visual scene \cite{Torralba2003ContextualPF} and its attributes (i.e., indoor/outdoor, time of day, etc.). For example, the presence of a microwave oven and dishwasher indicates that the visual scene is likely a kitchen. The global context information can also help in identifying atypical scenarios \cite{Choi2012ContextMA} involving objects i.e., a car located in the sky or a plane running on a highway, as shown in Fig \ref{outcontext}. 
-
 \begin{figure}[h!]
     \centering
         \includegraphics[width=0.5\linewidth]{figures/out_of_context_image.png}
@@ -119,22 +129,15 @@ in recognizing the given visual scene \cite{Torralba2003ContextualPF} and its at
 \end{figure}
     
 \section{Context-driven multi-modal understanding}
-
 \begin{figure}[h!]
     \centering
         \includegraphics[width=0.9\linewidth]{figures/context_diagram.pdf}
         \caption{Outline diagram showing the presence of various contexts and associated modalities in a sample movie clip.} 
         \label{contextmultimodal}
 \end{figure}
-
-
-Multi-modal tasks require the processing of diverse contextual information followed by fusion for both macro and instance-level content understanding. In the case of multi-modal content, the contextual information is usually obtained through multiple input modalities. In \textbf{Fig \ref{contextmultimodal} (a)} \footnote{Hidden Figures (2016): https://www.youtube.com/watch?v=W1VZ1-ZdQ7k\&ab\_channel=20thCenturyStudios}, we can see that the face crop of the person captures the \textbf{local/facial} context in the frame of interest. The \textbf{global} context is captured by visual scene i.e., \textbf{road, car (exterior)}. External modalities in the form of natural language descriptions, i.e., \textit{Three women standing outside the car and showing their license} provide information about the interactions happening in the foreground. Further, this frame is a part of a longer narrative, as shown in the sequence of frames. The frame sequence captures both short-term and long-term \textbf{temporal context}, where short-term context centers around local activities, including interactions between the woman and the policeman, followed by long-term temporal context involving multiple transitions within the narrative. By taking long-term temporal context into account, it can be seen that the clip ends with a spacecraft launch. Further, the sound event associated with spacecraft launch captures additional short-term temporal context.
-
-
+Multi-modal tasks require the processing of diverse contextual information followed by fusion for both macro and instance-level content understanding. In the case of multi-modal content, the contextual information is usually obtained through multiple input modalities. In \textbf{Fig \ref{contextmultimodal}} \footnote{Hidden Figures (2016): https://www.youtube.com/watch?v=W1VZ1-ZdQ7k\&ab\_channel=20thCenturyStudios}, we can see that the face crop of the person captures the \textbf{local/facial} context in the frame of interest. The \textbf{global} context is captured by visual scene i.e., \textbf{road, car (exterior)}. External modalities in the form of natural language descriptions, i.e., \textit{Three women standing outside the car and showing their license} provide information about the interactions happening in the foreground. Further, this frame is a part of a longer narrative, as shown in the sequence of frames. The frame sequence captures both short-term and long-term \textbf{temporal context}, where short-term context centers around local activities, including interactions between the woman and the policeman, followed by long-term temporal context involving multiple transitions within the narrative. By taking long-term temporal context into account, it can be seen that the clip ends with a spacecraft launch. Further, the sound event associated with spacecraft launch captures additional short-term temporal context.
 \section{Multimodal content understanding - scale}
-
 This work considers multimodal content understanding at two distinct scales: \textbf{instance-level} and \textbf{macro-level}. 
-
 \subsection{Macro-level content understanding}
 Macro level provides an expanded view by referring to the broad thematic elements associated with multimodal content like \textit{broad theme/topic}, \textit{underlying genre}, \textit{sentiment}, etc. As seen in Fig \ref{macro_scale_understanding} (a), the broad theme/topic, i.e., \textbf{Performing arts}, provides the macro-level view of the video. Further in Fig  \ref{macro_scale_understanding} (b), the genre, i.e., \textbf{animation}, \textbf{action}, \textbf{adventure} gives a high-level insight into the movie snippet. In our work, we consider macro-level understanding along the lines of genre for movie trailers and broad thematic elements for advertisement videos. 
 \begin{figure}
@@ -143,35 +146,19 @@ Macro level provides an expanded view by referring to the broad thematic element
     \caption{Macro-level understanding examples (a) \textbf{Broad theme/topic:} Performing arts (b) \textbf{Genre:} Animation/action/adventure}
     \label{macro_scale_understanding}
 \end{figure}
-
 \subsection{Instance-level content understanding}
-
 Instance level refers to content understanding at the scale of individual entities like objects and persons w.r.t. different attributes like \textbf{appearance}, \textbf{perceived emotional state}, \textbf{gender}, \textbf{age}, \textbf{skintone} and \textbf{occupation}. For example, in Fig \ref{instance_scale_understanding} (a) and (b), the instance-level view refers to the person with the green bounding box and the associated attributes of perceived age, gender, and affective state. In our work, we look at instance-level content understanding in terms of estimating the person's affective state.
-
 \begin{figure}
  \centering
     \includegraphics[width=\textwidth]{figures/instance_level_scale_understanding.pdf}
-    \caption{Instance-level understanding examples}
+    \caption{Instance-level understanding examples. Image source: \cite{Gustafson2023FACETFI}}
     \label{instance_scale_understanding}
 \end{figure}
-
-
 \section{Organization and contributions}
-
-\begin{figure}[h!]
-    \centering
-        \includegraphics[width=\textwidth]{figures/Overview_diagram.pdf}
-        \caption{Organization of the thesis proposal with different components}
-        \label{proposalorganization}
-\end{figure}
-
 In this section, we provide the basic outline of the thesis proposal. The proposed thesis statement is given as follows:
-
 \begin{tcolorbox}[width=\textwidth]
 Context-guided attention improves multi-modal content understanding at diverse scales.
 \end{tcolorbox}
-
-
 We develop contextual approaches for improved multimodal content understanding at different scales: \textbf{instance-level} and \textbf{macro-level}.  In terms of input sources, we consider multi-modal media content, including \textbf{movies}, \textbf{TV shows}, \textbf{advertisements}, and \textbf{natural scene images}. Looking at the multimodal content from both instance and macro-level viewpoints provides a holistic understanding of given inputs. In terms of the distinction between context and modalities, we use modalities available in input sources to extract diverse forms of contextual information. Further, dissimilar modalities can provide similar types of contextual information. Certain examples of contextual information obtained through multiple modalities are as follows: 
 
 \begin{itemize}
@@ -180,6 +167,12 @@ We develop contextual approaches for improved multimodal content understanding a
     \item  \textbf{Audio modality:} Captures \textbf{\textit{temporal}} context through audio events, background music and speech.
 \end{itemize}
 
+\begin{figure}[h!]
+    \centering
+        \includegraphics[width=\textwidth]{figures/Overview_diagram.pdf}
+        \caption{Organization of the thesis proposal with different components}
+        \label{proposalorganization}
+\end{figure}
 
 For example, both visual and audio modalities provide the necessary temporal context for various content-understanding tasks.
 \par 

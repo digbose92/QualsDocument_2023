@@ -40,7 +40,8 @@ Our contributions are as follows:
 \item \textbf{Language guided Movie-centric scene taxonomy:} We develop a movie-centric scene taxonomy by leveraging scene headers (sluglines) from movie scripts (language-based sources) and existing video datasets with scene labels like HVU\cite{diba_large_2020}. 
 \item \textbf{Automatic shot tagging:} We utilize our generated scene taxonomy to automatically tag around 1.12M shots from 32K movie clips using a pretrained vision-language model called CLIP \cite{CLIP} based on a frame-wise aggregation scheme.  
 \item \textbf{Multi-label scene classification:} We develop multi-label scene classification baselines using the shot-level tagged dataset called MovieCLIP and evaluate them on an independent shot-level dataset curated by human experts. 
-\item \textbf{Downstream tasks:} We further extract feature representations from the baseline models pretrained on MovieCLIP and explore their applicability in diverse downstream tasks of multi-label scene and movie genre classification from web videos \cite{diba_large_2020} and trailers \cite{2019Moviescope}, respectively. 
+
+\item \textbf{Macro-level content understanding:} We further extract feature representations from the baseline models pretrained on MovieCLIP and explore their applicability in macro-level content understanding task of movie genre classification from trailers \cite{2019Moviescope}. 
 \end{itemize}
 \section{Related work}
 \textbf{Image datasets for visual scene recognition:}
@@ -50,7 +51,8 @@ HVU \cite{diba_large_2020}, a recently released public dataset of web videos wit
 \textbf{Movie-centric visual scene recognition:} In the domain of scene recognition from movies, Hollywood scenes \cite{marszalek09} was first introduced with 10 scene classes extracted from headers in movie scripts across 3669 movie clips. A socially grounded approach was explored in Moviegraphs \cite{moviegraphs} with emphasis on the underlying interactions (relationships/situations) along with spatio-temporal localizations and associated visual scenes (59 classes).
 For holistic movie understanding tasks, the Movienet dataset\cite{huang2020movienet} was introduced with the largest movie-centric scene taxonomy consisting of 90 place (visual scene) tags with segment-wise human annotations of entire movies. Instead of entire movie data, short movie clips sourced from YouTube channel of Fandango Movie clips were used for text-video retrieval in Condensed movies dataset \cite{bain2020condensed}, visual semantic role labeling \cite{Sadhu_2021_CVPR} and pretraining object-centric transformers \cite{transformers} for long-term video understanding in LVU dataset \cite{lvu2021}. While there is no explicit visual scene labeling, the raw descriptions available on Youtube with the movie clips have mentions of certain visual scene classes.
 \\
-MovieCLIP, our curated dataset for visual scene context recognition, is built on top of movie clips available as a part of Condensed Movies dataset \cite{bain2020condensed}. A comparative overview of MovieCLIP and other image and video datasets with visual scene labels is shown in Table~\ref{Overview}. In comparison with previous video-centric works, our taxonomy generation relies on domain-centric data sources like movie scripts and auxiliary world knowledge from web-video-based sources like HVU with minimal human-in-the-loop supervision for taxonomy refinement.
+MovieCLIP, our curated dataset for visual scene context recognition, is built on top of movie clips available as a part of Condensed Movies dataset \cite{bain2020condensed}. A comparative overview of MovieCLIP and other image and video datasets with visual scene labels is shown in Table~\ref{SceneOverview}. In comparison with previous video-centric works, our taxonomy generation relies on domain-centric data sources like movie scripts and auxiliary world knowledge from web-video-based sources like HVU with minimal human-in-the-loop supervision for taxonomy refinement.
+\textbf{Knowledge transfer from pretrained multimodal models:}
 \begin{table*}[h!]
 \centering
 \resizebox{0.8\textwidth}{!}{
@@ -74,14 +76,11 @@ LVU  \cite{lvu2021}    & Movies    & 6    & 723   & Automatic &  Video clip ($1 
 }
 \vspace{5mm}
 \caption{Comparison of MovieCLIP with other available image and video datasets with visual scene classes.  \textbf{Natural}: Images of natural scenes.\textbf{Web-Videos}: videos obtained from internet sources like YouTube. \textbf{AV}: whether publicly available or not. Avg or duration span of video data sources are provided with the respective units. \textbf{NA}: Number of scene classes explicitly not mentioned with the dataset.}
-\label{Overview}
+\label{SceneOverview}
 \end{table*}
-\\
-\textbf{Knowledge transfer from pretrained multimodal models:}
 Vision language(V-L) based pretraining methods involve learning transferable visual representations based on various pretext tasks associated with image and text pairs. Examples of pretext tasks in V-L domain include prediction of masked words in captions based on visual cues in ICMLM \cite{sariyildiz2020icmlm}, pretraining image encoders based on bicaptioning objective in VirTex \cite{desai2021virtex} and contrastive alignment of image-caption pairs in CLIP \cite{CLIP}. Leveraging features from CLIP's visual and text encoders have improved existing vision-language tasks \cite{Shen2021HowMC} and enabled open-vocabulary object detection \cite{Gu2021OpenvocabularyOD}, and language-driven semantic segmentation \cite{Li2022LanguagedrivenSS}. In our work, we use the pretrained visual and text encoders of CLIP and utilize it as a noisy annotator by tagging movie shots based on our curated visual scene taxonomy.
 
 \section{Language driven taxonomy curation}
-
 Based on domain-specific challenges mentioned in Fig \ref{Intro figure}, we can see the need for a taxonomy curation phase for visual scenes in movies. In this section, we outline the process involved in curating a visual scene taxonomy based on the domain information present in movie scripts and the pre-existing scene information present in auxiliary video datasets.
 
 \subsection{Sources of visual scene information}
@@ -142,14 +141,15 @@ This results in a set of labels called $L_{merge}$ from $L_{N}$. Further, The hu
 \begin{equation}
      L_{final}=L_{com}\cup L_{merge} \cup L_{human}
 \end{equation}
-\textbf{Label source distribution:} As shown in Fig. \ref{label distribution}, the largest share is from movie sluglines (39\%).Only 9\% of the total labels is provided through feedback from human expert. Instead of manually binning classes into broad categories like indoor, outdoor or man-made, we discover groupings among classes through Affinity propagation clustering \cite{brendanfrey}  (based on label representations from sentence transformers). Certain clusters of visual scene labels are listed below, where all the sport locations, water bodies and performing arts locations are grouped together.
+\textbf{Label source distribution:} As shown in Fig. \ref{label distribution}, the largest share is from movie sluglines (39\%).Only 9\% of the total labels is provided through feedback from human expert. Instead of manually binning classes into broad categories like indoor, outdoor, or man-made, we discover groupings among classes through Affinity propagation clustering \cite{brendanfrey}  (based on label representations from sentence transformers). Certain clusters of visual scene labels are listed below, where all the sports locations, water bodies and performing arts locations are grouped together.
 \begin{itemize}
     \item \textbf{sport locations:} Basketball court, Race track, Tennis court, Batting cage, Golf course
     \item \textbf{water bodies:} River, Pool, Waterfall, Hot spring, Pond, Swamp, Lake
     \item \textbf{performing arts locations:} Stage, Conference Room, Theater, Auditorium, Ballroom
     \item \textbf{Natural landforms:} Mountain, Desert, Valley
 \end{itemize}
-For visualizing certain groups of visual scene classes that are semantically close to each other, we use tSNE \cite{tSNE} to project the 384 D label embeddings obtained through MiniLM-L6-v2 sentence transformers model \cite{reimers-2019-sentence-bert} to 2 dimensions. Examples include the visual scene classes associated with \textbf{study}, \textbf{water bodies} , \textbf{medical scene classes}, \textbf{natural landforms}, \textbf{automobile-based scene classes}, \textbf{dining-scene classes}.
+A detailed breakdown of visual scenes with respective sources is shown in Appendix (\ref{app:scene_categories})
+For visualizing certain groups of visual scene classes that are semantically close to each other, we use tSNE \cite{tSNE} to project the 384 D label embeddings obtained through MiniLM-L6-v2 sentence transformers model \cite{reimers-2019-sentence-bert} to 2 dimensions. Examples include the visual scene classes associated with \textbf{study}, \textbf{water bodies}, \textbf{medical scene classes}, \textbf{natural landforms}, \textbf{automobile-based scene classes}, \textbf{dining-scene classes}, as seen in Fig \ref{tsneplot}. 
 \begin{figure*}[h!]
     \centering
     \includegraphics[width=0.9\textwidth]{figures/tsne_hvu_slugline_combined.png}
@@ -290,14 +290,14 @@ This indicates that a major share of the shot samples having low  \texttt{CLIPSc
 \label{shot scale distribution}
 \end{figure*}
 \subsection{Quality estimation through human verification}
-In order to estimate the reliability of the top-k labels provided by CLIP for movie shots, we conducted a verification task on Amazon Mechanical Turk. We provided a pool of annotators with a subset of 2393 movie shots from VidSitu \cite{Sadhu_2021_CVPR} dataset, along with top-5 scene labels. As shown in Fig \ref{mturk experiment},  if none of the scene labels appear relevant for the given movie shot, the annotators choose the \textbf{Not relevant} option.  After the human verification experiment is complete, we discard the shot samples with no agreements and obtain evaluation data consisting of 1883 shot samples. We also use the LSTM model pretrained on MovieShots dataset to predict shot types for samples that have no agreements with human experts. The distribution of shot-wise predictions from the trained LSTM model is shown in Fig \ref{shot_type_distribution}. We can see that 80\% of shots having no agreements with human annotations belong to the shot categories having moderate (MS) to very high person closeup (ECS). 
-\begin{figure*}[h!]
+\begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\textwidth]{figures/verification_experiment.pdf}
     \caption{Schematic design of the mturk experiment used for human verification of visual scenes.}
     \label{mturk experiment}
-\end{figure*}
-\begin{figure}
+\end{figure}
+In order to estimate the reliability of the top-k labels provided by CLIP for movie shots, we conducted a verification task on Amazon Mechanical Turk. We provided a pool of annotators with a subset of 2393 movie shots from VidSitu \cite{Sadhu_2021_CVPR} dataset, along with top-5 scene labels. As shown in Fig \ref{mturk experiment},  if none of the scene labels appear relevant for the given movie shot, the annotators choose the \textbf{Not relevant} option.  After the human verification experiment is complete, we discard the shot samples with no agreements and obtain evaluation data consisting of 1883 shot samples. We also use the LSTM model pretrained on MovieShots dataset to predict shot types for samples that have no agreements with human experts. The distribution of shot-wise predictions from the trained LSTM model is shown in Fig \ref{shot_type_distribution}. We can see that 80\% of shots having no agreements with human annotations belong to the shot categories having moderate (MS) to very high person closeup (ECS). 
+\begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\textwidth]{figures/Shot_type_distribution_discarded_shots.png}
     \caption{Distribution of shot scale predictions among the shots having no agreements between human annotators and CLIP's labeling scheme. \textbf{ECS}: Extreme Close-up shot, \textbf{CS}: Close-up shot, \textbf{MS}: Medium shot, \textbf{LS}: Long shot, \textbf{FS}: Full shot}
@@ -321,8 +321,8 @@ We use I3D\cite{i3d}, R(2+1)D \cite{r2plus1d}, Slowfast \cite{feichtenhofer2019s
 \textbf{Video Transformer models:}
 For video transformer models, we consider the base TimeSformer model \cite{Bertasius2021IsSA} that considers 8 frames (224 x 224) as inputs. For finetuning TimeSformer \cite{Bertasius2021IsSA} model, we use SGD with learning rate 5e-3 and weight decay of 1e-4 and batch size of 8. For better speed-accuracy tradeoff we use the Video Swin Transformer model \cite{liu2021video}, \cite{liu2021Swin} called Swin-B with clip size of 32 frames (224 x 224) as inputs. For finetuning we use AdamW \cite{AdamW} optimizer with learning rate 1e-4 and Cosine Annealing with batch size of 32. 
 \par 
-Based on the results in Table \ref{visual movie models}, we can see that 2-layer LSTM model trained using features from Imagenet-21K pretrained ViT-B/16 performs better compared to features extracted using Resnet-18 model pretrained on Places2 dataset. This shows that features from Places2 pretrained models might not be optimal for scene recognition in the movie domain.
-In terms of end-to-end models, video transformers, including TimeSformer and Swin-B models outperform 3D convolutional models. Swin-B model performs better than other models by obtaining an average correlation of \textbf{0.497} and mean average precision of \textbf{44.4}.
+Based on the results in Table \ref{visual movie models}, we can see that 2-layer LSTM model trained using features from Imagenet-21K pretrained ViT-B/16 performs better compared to features extracted using Resnet-18 model pretrained on Places2 dataset. This shows that features from ViT-B/16 are more suited for scene recognition in the movie domain as compared to Places2.
+In terms of end-to-end models, video transformers, including TimeSformer and Swin-B models outperform 3D convolutional models. Swin-B model performs better than other models by obtaining an average correlation of \textbf{0.497} and mean average precision of \textbf{44.4}. Swin-B's performance is very close to ViT-B/16 due to the initialization of Swin-B with pretrained vision transformer weights. 
 \begin{table}[h!]
 \centering
 \resizebox{0.7\columnwidth}{!}{
@@ -367,7 +367,7 @@ ${M_{scene}}$ &  55.92   \\ \hline
 \caption{Mean average precision of different models on HVU dataset for multi label scene classification (248 classes). Backbone for end to end models: 3D Resnet18.}
 \label{HVU}
 \end{table}
-\subsubsection{Multi label genre classification - movie trailers}
+\subsubsection{Macro-level content understanding - genre classification}
 \begin{table*}[h!]
 \centering
 \resizebox{\textwidth}{!}{
@@ -432,8 +432,8 @@ From the visual scene context recognition in media content guided by multimodal 
     \item \textbf{Context-change tracking:} Shot-specific labels can enable tracking of visual scene context changes in dynamic content like movie videos.
     \item \textbf{Macro-level content understanding:} Pretrained visual scene representations can enable macro-level multimodal content understanding ( i.e. genre classification).
 \end{itemize}
-\section {Future work}
- Future directions include modeling of temporal transitions of visual scenes across shots, multimodal association between audio events and visual scenes, and multi-task modeling of visual scenes and related attributes like actions, time of day, and settings (interior and exterior).
+% \section {Future work}
+%  Future directions include modeling of temporal transitions of visual scenes across shots, multimodal association between audio events and visual scenes, and multi-task modeling of visual scenes and related attributes like actions, time of day, and settings (interior and exterior).
 
 
 

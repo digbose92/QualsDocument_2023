@@ -1,6 +1,12 @@
 \chapter{Advertisement video understanding through the lens of temporal context}
 
-In this chapter, we will explore the role of temporal context in macro-level content understanding of dynamic sources, i.e., videos. Specifically, we consider advertisement videos due to their unique narrative structures of multiple short-term temporal context changes that are linked by a longer narrative thread. In order to study the context-driven approaches, we introduce a new ads-specific benchmark called \textbf{\textit{MM-AU}} with salient narrative-driven tasks for macro-level understanding i.e., topic categorization, tone transition, and social relevance. 
+In this chapter, we will explore the role of temporal context in macro-level content understanding of dynamic sources, i.e., videos. Specifically, we consider advertisement videos due to their unique narrative structures of multiple short-term temporal context changes that are linked by a longer narrative thread. In order to study the context-driven approaches, we introduce a new ads-specific benchmark called \textbf{\textit{MM-AU}} with salient narrative-driven tasks for macro-level understanding, i.e., topic categorization, tone transition, and social relevance. An overview of this work can be seen in Fig \ref{advertisement video understanding}.
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{figures/advertisement_video_understanding.pdf}
+    \caption{Overview of advertisement video understanding through the lens of temporal context}
+    \label{advertisement video understanding}
+\end{figure}
 
 \section{Video Understanding}
 
@@ -40,13 +46,13 @@ Thus, the temporal context information needs to be processed both locally and gl
 \end{figure}
 
 \section{Advertisements as medium}
-As a primary media source for disseminating information, advertisements (ads for short) have been utilized to promote products or convey messages about extant social or political issues. The utility of advertisements as a media source has been amplified by the wide variety of platforms like radio, television, newspaper print, video streaming, and social networking sites, presenting significant influences, whether direct or indirect, to viewers from diverse backgrounds \cite{Pardun}. As shown in Fig \ref{ads_structure_set}, The rising importance of advertisements in the current socio-economic scenario is evident from the expected increase in media ad spending from 225.79 in 2020 to 322.11 billion dollars in 2024.
+As a primary media source for disseminating information, advertisements (ads for short) have been utilized to promote products or convey messages about extant social or political issues. The utility of advertisements as a media source has been amplified by the wide variety of platforms like radio, television, newspaper print, video streaming, and social networking sites, presenting significant influences, whether direct or indirect, to viewers from diverse backgrounds \cite{Pardun}. As shown in Fig \ref{ads_spending}, The rising importance of advertisements in the current socio-economic scenario is evident from the expected increase in media ad spending from 225.79 in 2020 to 322.11 billion dollars in 2024.
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.9\textwidth]{figures/statistic_id272314_advertising-spending-in-the-us-2020-2024.png}
+\includegraphics[width=0.8\textwidth]{figures/statistic_ads_spending.png}
 \caption{Increase in demand for advertisements over last 4 years}
-\label{ads_structure_set}
+\label{ads_spending}
 \end{figure}
 
 \section{Advertisements - Narrative driven tasks and challenges}
@@ -67,7 +73,6 @@ Objectively understanding the rich content in ads and their impact on the viewer
 \textbf{\underline{Social message}}: Advertisements act as a major source of information about pressing social issues for consumers. Brands conveying messages about various social issues, including but not limited to gender inequalities, racial discrimination, and environmental conservation, are viewed favorably by consumers across different age groups \cite{Brooks2020ExploringAO}. In terms of advertisement videos, social message portrayal is characterized by a huge diversity in depiction, as shown in Fig~\ref{introfig} (c) due to underlying categories like smoking, accidents, gun violence etc.
 
 In this work, we introduce a multilingual multimodal benchmark called \textbf{\textit{MM-AU}} for the macro-level understanding of advertisement videos across the tasks of topic categorization, social message, and tone transition detection. Due to the inherent structure of the ads involving transitions in temporal context driven through multiple modalities, we propose context-guided attention mechanisms for the previously mentioned macro-level tasks. Our contributions can be listed as follows:
-
 \begin{itemize}
     \item \textbf{\underline{Topic classification:}} We merge existing taxonomies for topic annotations from prior ads datasets and publicly available websites like {Ads of world}\footnote{https://www.adsoftheworld.com/} to obtain a condensed set of topic labels for the advertisement videos.
     \item \textbf{\underline{Tone Transition detection:}} We introduce a novel benchmark task of tone transition detection in advertisement videos by obtaining crowdsourced feedback from human annotators.
@@ -76,7 +81,6 @@ In this work, we introduce a multilingual multimodal benchmark called \textbf{\t
     \item \textbf{\underline{Context guided attention:}} We provide multiple context-guided attention baselines to benchmark the performance for the three macro-level tasks (topic classification, transition detection, and social message) and highlight future possibilities of explorations.
 \end{itemize}
 \section{Related work}
-
 \textbf{Narrative understanding:} 
 Narratives \cite{Fisher1987HumanCA} play an important role in enabling effective human communication and organizing the daily sequence of events. Advertisements centered on narratives \cite{Escalas1998ADVERTISINGNW} influence consumers by providing a concrete story arc centered around specific themes, protagonists, and their actions. Kim et al. \cite{Kim2017WhyNA} introduced an integrated theory of understanding narratives in advertisements based on key variables like emotic response, ad hedonic value, ad credibility, and perceived goal facilitation. Lien et al. \cite{Lien2013NarrativeAT} explored narrative ads from the lens of persuasion and the relationship with different advertisement mediums - verbal or visual. In the realm of computational narrative understanding, prior works have focused on language-based approaches for marking high-level structures in short stories \cite{Li2017AnnotatingHS}, most reportable events (MRE) in Reddit comment threads \cite{Ouyang2015ModelingRE} and primary processes in movie scripts, newspaper articles, etc \cite{Boyd2020TheNA}.\\
 \textbf{Affect modeling in videos:}
@@ -100,7 +104,7 @@ E-MMAD                 & SG descriptions          & 1021.6 h          & 120984  
 }
 \vspace{5mm}
 \caption{Comparison of \textbf{\textit{MM-AU}} with other available advertisement benchmarks across different modalities.  \underline{Annotation type:} \textbf{H}: Human annotation, \textbf{AL}: Active Learning, \textbf{SA}: Semi-automatic, \textbf{SG}: Store generated. \underline{Duration:} \textbf{NA}: Not applicable for images; Mentioned in hours(h). \underline{\#Samples:} Number of video clips or images. \underline{\#Shot:} \textbf{NA}: Not applicable for images; Number of shots detected from all the video samples. \underline{\#Class:} \textbf{T:} Topic, \textbf{S:} Sentiment, \textbf{OE:} Open-Ended, \textbf{H:} Humor, \textbf{Ex:} Exciting, \textbf{Pr:} Presentation, \textbf{St:} Style, \textbf{Pl:} Place, \textbf{PS:} Persuasion strategy, \textbf{PC:} Product categories, \textbf{SM:} Social messages}
-\label{Overview}
+\label{Overview_ads}
 \end{table*}
 
 While there has been progress in terms of movie understanding due to the introduction of large-scale multimodal benchmark datasets like Condensed Movies \cite{bain2020condensed}, MovieNet \cite{huang2020movienet}, MAD \cite{Soldan_2022_CVPR}, Movie-cuts \cite{Pardo2021MovieCutsAN}, MovieCLIP \cite{Bose_2023_WACV} and SAM-S \cite{Hebbar2023ADF}, only few benchmarks have focused on large-scale understanding of advertisements across broad and fine-grained content. Hussain et al. \cite{Hussain2017AutomaticUO} introduced the benchmark Video-Ads dataset to facilitate understanding of images and videos along the lines of broad topics, induced sentiments, and action/intent reasoning. The images in the Video-Ads dataset were utilized in \cite{Singla2022PersuasionSI} for computational modeling of persuasion across 21 categories in marketing domain. Regarding large-scale ads understanding, Tencent-AVS dataset \cite{Jiang2022TencentAA} was proposed to enable multi-modal scene level categorization into semantic classes like presentation, places and styles. While the previously mentioned datasets focused on classification tasks, E-MMAD \cite{Zhang2022AttractMT} introduced the task of informative caption generation from advertisements across 120k e-commerce videos.
@@ -284,9 +288,6 @@ We further explore the intersection between the presence of social message and a
 \caption{Distribution of perceived tone labels across the (a) start, (b) middle, and (c) ending segments in MM-AU dataset for videos having social message (739 videos) }
 \label{start_mid_end_soc_msg_tone}
 \end{figure}
-
-
-
 \section{Task definition}
 \textbf{\underline{Social message detection:}}
 Based on the social message annotations (majority), the presence/absence of social message (SM) for $ith$ video is defined as:
@@ -307,7 +308,7 @@ Based on the start, middle, and end perceived tone labels (majority), we define 
       1 & \text{else}
     \end{cases}       
 \end{equation}
-Our aim is to learn a multimodal network $f_{Tr}$ to predict binary tone transition $\hat{Tr}_{i}$ for the $ith$ video.
+Our aim is to learn a network $f_{Tr}$ to predict binary tone transition $\hat{Tr}_{i}$ for the $ith$ video.
 MM-AU dataset has 3854 and 4545 videos marked with Transition (1) and No Transition (0), respectively.\\
 \textbf{\underline{Topic categorization:}}
 For topic categorization, we aim to learn a multimodal network $f_{Topic}$ to predict $\hat{Topic}_{i}$ for the $ith$ video out of 18 target categories. 
@@ -318,13 +319,7 @@ In the case of advertisements, we utilize the available information with tempora
       (Background music and audio events).
     \item \textbf{Foreground context:} Language modality (Narrations/descriptions through text transcripts).
 \end{itemize}
-
 \section{Multimodal context fusion}
-\begin{figure}[h!]
-     \centering
-     \includegraphics[width=\textwidth]{figures/ads_modeling_structure.png}
-    \caption{Proposed architecture for the fusion of different modalities associated with temporal and foreground contexts. }
-\end{figure}
 For the input modalities $a$, $v$, $t$, we outline the separate context-guided fusion operations as follows:
 \subsection{Foreground and temporal context fusion}
 We outline the operations for foreground (\textbf{language}) and temporal (\textbf{visual}) context fusion as follows:
@@ -336,9 +331,13 @@ We outline the operations for foreground (\textbf{language}) and temporal (\text
     \end{split}
  \end{align}
  Here, $\mathbf{{Tx}_{TV}}$ is the text-visual fusion block used for combining foreground (\textbf{text}) and temporal (\textbf{visual}) contexts. $f_{visual}$ and $f_{text}$ refer to the pretrained visual and text encoders. The linear projection layers for visual and text modalities are denoted by $Vis_{proj}$ and $Text_{proj}$. 
-
+ \begin{figure}[h!]
+     \centering
+     \includegraphics[width=\textwidth]{figures/ads_modeling_structure.png}
+    \caption{Proposed architecture for the fusion of different modalities associated with temporal and foreground contexts. }
+\end{figure}
 \subsection{Temporal context fusion}
-For the temporal context fusion block we have the following sequence of operations:
+For the temporal context fusion block, we have the following sequence of operations:
 \begin{align}
     \begin{split}
      e_{aud}&=Aud_{proj}(f_{aud}(a))\\
@@ -477,9 +476,8 @@ We provide class-wise comparisons between \texttt{Flan-T5-XXL} and \texttt{GPT-4
 From Table \ref{exptable}, we can see that supervised unimodal models (MHA, LSTM) show improved performance as compared to simple random and majority baselines. In terms of unimodal models, MHA model trained on shot-level visual features (denoted by CLIP-S) perform far better than audio features (AST) in social message detection (\textbf{F1: 72.28} vs \textbf{F1: 55.33}) and topic categorization tasks.
 (\textbf{F1: 47.74} vs \textbf{F1: 15.48}). For the tone transition task, MHA model trained on audio features (AST) shows close performance (\textbf{F1:58.60} vs \textbf{F1: 61.48}) as compared to visual features, due to the dependence of the tone transition task on the ambient music. \\
 \textbf{\underline{Multimodal models:}} For multimodal models, we observe that the fusion of text and visual modalities through a Perceiver-IO-based encoder ($\mathbf{Tx_{TV}}$) performs better (\textbf{F1:74.03}) for social message detection compared to audio-visual or audio-text fusion. This can be attributed to the presence of socially relevant descriptors in the transcripts and video shots. However, the fusion of audio with visual signals ($\mathbf{Tx_{AV}}$) improves the performance in the tone-transition detection task (\textbf{F1: 63.72}). For topic categorization, we find that the fusion of text and visual modalities ($\mathbf{Tx_{TV}}$) performs better than other paired modalities (\textbf{F1:50.58}) due to topic-specific identifiers in transcripts and shots. 
-\par
+\\
  \textbf{\underline{Logit fusion:}} Our proposed approach based on logit fusion strategies: Average-Max (\textbf{A-Max}) and Dual-Max (\textbf{D-Max}) exhibits similar performance across all tasks. We obtain gain for tone-transition (\textbf{F1:64.67}) based on the \textbf{A-Max} fusion strategy of $\mathbf{Tx_{AV}}$ and $\mathbf{Tx_{TV}}$ models. In terms of class-wise metrics, \textbf{A-Max} fusion improves the transition class average F1-score to \textbf{61.28\%} as compared to $\mathbf{Tx_{AV}}$ (\textbf{60.72\%}) and $\mathbf{Tx_{TV}}$ (\textbf{60.18\%}), as seen in Fig \ref{tone_transition_social_message_multimodal} (b). However, we observe from Fig \ref{tone_transition_social_message_multimodal} (a), that both average-Max (\textbf{A-Max}) and dual-Max (\textbf{D-Max}) fusion strategies do not help for social message detection (i.e., \textbf{Yes} class).
- 
  In the case of topic categorization, logit fusion through \textbf{A-Max} of $\mathbf{Tx_{AV}}$ and $\mathbf{Tx_{TV}}$ models results in the best performance (\textbf{F1: 54.22}). Further, \textbf{A-Max} fusion results in improvements over $\mathbf{Tx_{AV}}$ and $\mathbf{Tx_{TV}}$ across 15 topic categories (out of 18), with noticeable gains in the minority categories i.e., Retail ($\sim${\textbf{6.2\%}}), Industrial \& Agriculture ($\sim$\textbf{5\%}), Household ($\sim$\textbf{7\%}). Similar trends can be observed for \textbf{D-Max} fusion, with improvements obtained across 14 topic categories (out of 18). The detailed comparisons between $\mathbf{Tx_{AV}}$,  $\mathbf{Tx_{TV}}$, \textbf{A-Max} and \textbf{D-Max} can be found in Fig \ref{topic_multimodal}.
 
 
